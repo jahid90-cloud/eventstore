@@ -5,28 +5,28 @@ const createWrite = require('./write');
 const createReadLastMessage = require('./read-last-message');
 const createProject = require('./project');
 
-const createHandlers = ({ eventStore }) => {
-    const read = createRead({ eventStore });
-    const write = createWrite({ eventStore });
-    const readLastMessage = createReadLastMessage({ eventStore });
-    const project = createProject({ eventStore });
+const createHttpHandlers = ({ config, eventStore }) => {
+    const handleRead = createRead({ config, eventStore });
+    const handleReadLastMessage = createReadLastMessage({ config, eventStore });
+    const handleWrite = createWrite({ config, eventStore });
+    const handleProject = createProject({ config, eventStore });
 
     return {
-        read,
-        readLastMessage,
-        write,
-        project,
+        handleRead,
+        handleReadLastMessage,
+        handleWrite,
+        handleProject,
     };
 };
 
-const createV1Service = ({ eventStore }) => {
-    const handlers = createHandlers({ eventStore });
+const createV1Service = ({ config, eventStore }) => {
+    const handlers = createHttpHandlers({ config, eventStore });
 
     const router = express.Router();
-    router.post('/write', handlers.write);
-    router.get('/read', handlers.read);
-    router.get('/read-last-message', handlers.readLastMessage);
-    router.post('./project', handlers.project);
+    router.post('/write', handlers.handleWrite);
+    router.get('/read/:streamName', handlers.handleRead);
+    router.get('/last/:streamName', handlers.handleReadLastMessage);
+    router.post('/project/:streamName', handlers.handleProject);
 
     return {
         router,

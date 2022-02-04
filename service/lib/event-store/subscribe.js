@@ -1,3 +1,7 @@
-const createSubscribe = ({ config }) => {};
+const createSubscribe = ({ config }) => {
+    return {
+        subscribe: () => {},
+    };
+};
 
 module.exports = createSubscribe;

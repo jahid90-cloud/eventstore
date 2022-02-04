@@ -1,3 +1,8 @@
-const createRead = ({ config }) => {};
+const createRead = ({ config }) => {
+    return {
+        read: () => {},
+        readLastMessage: () => {},
+    };
+};
 
 module.exports = createRead;

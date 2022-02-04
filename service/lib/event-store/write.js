@@ -1,3 +1,7 @@
-const createWrite = ({ config }) => {};
+const createWrite = ({ config }) => {
+    return {
+        write: () => {},
+    };
+};
 
 module.exports = createWrite;
