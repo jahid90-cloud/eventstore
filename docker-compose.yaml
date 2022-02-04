@@ -11,7 +11,7 @@ networks:
 services:
   openapi:
     image: registry.jahiduls.mint/swaggerapi/swagger-ui:latest
-    container_name: event-store-openapi
+    container_name: eventstore-openapi
     restart: unless-stopped
     networks:
       - traefik
@@ -34,3 +34,25 @@ services:
       # Defined by traefik container
       - traefik.http.routers.event-store-openapi-http.middlewares=https-redirect
       - traefik.http.services.event-store-openapi.loadbalancer.server.port=8080
+
+  eventstore:
+    image: registry.jahiduls.mint/eventstore:${POSTGRES_VERSION}-${MESSAGE_DB_VERSION}
+    build:
+      context: ./database/
+      dockerfile: Dockerfile
+      args:
+        - POSTGRES_VERSION=${POSTGRES_VERSION}
+        - MESSAGE_DB_VERSION=${MESSAGE_DB_VERSION}
+    container_name: eventstore
+    restart: unless-stopped
+    volumes:
+      - /data/docker/eventstore/data/pgdata:/bitnami/postgresql
+    environment:
+      - POSTGRESQL_PASSWORD=password
+      - POSTGRES_VERSION=${POSTGRES_VERSION}
+      - MESSAGE_DB_VERSION=${MESSAGE_DB_VERSION}
+    networks:
+      - backend
+    expose:
+      - 5432
+
