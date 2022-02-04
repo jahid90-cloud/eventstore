@@ -9,11 +9,11 @@ info:
     url: https://opensource.org/licenses/MIT
 
 servers:
-  - url: http://localhost:8080/v1
+  - url: http://localhost:8080/
     description: Development Server
-  - url: https://eventstore.jahiduls.mint/api/v1
+  - url: https://eventstore.jahiduls.mint/api/
     description: Docker Server
-  - url: https://eventstore.jahiduls.kube/api/v1
+  - url: https://eventstore.jahiduls.kube/api/
     description: Kubernetes Server
 
 tags:
@@ -48,7 +48,7 @@ paths:
         "503":
           $ref: "#/components/responses/ServiceUnavailable"
 
-  /write:
+  /v1/write:
     post:
       description: Write a message to a stream
       operationId: write
@@ -64,7 +64,7 @@ paths:
         "500":
           $ref: "#/components/responses/InternalServerError"
 
-  /read/{streamName}:
+  /v1/read/{streamName}:
     get:
       description: Read all the events from a stream
       operationId: read
@@ -82,7 +82,7 @@ paths:
           $ref: "#/components/responses/NotFound"
         "500":
           $ref: "#/components/responses/InternalServerError"
-  /readLast/{streamName}:
+  /v1/last/{streamName}:
     get:
       description: Read the last message from a stream
       operationId: readLastMessage
@@ -99,8 +99,8 @@ paths:
           $ref: "#/components/responses/NotFound"
         "500":
           $ref: "#/components/responses/InternalServerError"
-  /project/{streamName}:
-    get:
+  /v1/project/{streamName}:
+    post:
       description: Read the projection of messages
       operationId: project
       tags:
