@@ -1,15 +1,16 @@
 const express = require('express');
 
-const mountLocals = require('./mount-locals');
-const mountMiddlewares = require('./mount-middlewares');
-const mountRoutes = require('./mount-routes');
+const createMountMiddlewares = require('./mount-middlewares');
+const createMountRoutes = require('./mount-routes');
 
 const createExpressApp = ({ env, config }) => {
     const app = express();
 
-    mountLocals(app);
+    const mountMiddlewares = createMountMiddlewares({ config });
+    const mountRoutes = createMountRoutes({ config });
+
     mountMiddlewares(app);
-    mountRoutes(app, config);
+    mountRoutes(app);
 
     return app;
 };
