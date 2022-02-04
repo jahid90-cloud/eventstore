@@ -1,0 +1,28 @@
+{
+    "name": "@jahid90/eventstore",
+    "version": "1.0.0",
+    "description": "EventStore backend as an interface to MessageDB",
+    "main": "index.js",
+    "scripts": {
+        "start-dev-server": "NODE_ENV=development nodemon bin/start-server --color",
+        "start": "NODE_ENV=production node bin/start-server"
+    },
+    "keywords": [
+        "eventstore",
+        "message-db"
+    ],
+    "author": "Jahid",
+    "license": "MIT",
+    "dependencies": {
+        "body-parser": "^1.19.1",
+        "express": "^4.17.2",
+        "pg": "^8.7.1"
+    },
+    "devDependencies": {
+        "dotenv": "^16.0.0",
+        "nodemon": "^2.0.15"
+    },
+    "bin": {
+        "eventstore": "bin/start-server.js"
+    }
+}
