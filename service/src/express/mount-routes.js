@@ -1,8 +1,6 @@
 const createMountRoutes = ({ config }) => {
     const mountRoutes = (app) => {
-        app.use('/', (req, res, next) => {
-            return res.send('Hello World');
-        });
+        app.use('/v1', config.v1Service.router);
 
         config.logger.debug('Routes attached');
     };
