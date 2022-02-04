@@ -1,0 +1,215 @@
+openapi: 3.0.2
+
+info:
+  title: EventStore API
+  description: Backend service for the Event Store
+  version: 1.0.0
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: http://localhost:8080/v1
+    description: Development Server
+  - url: https://eventstore.jahiduls.mint/api/v1
+    description: Docker Server
+  - url: https://eventstore.jahiduls.kube/api/v1
+    description: Kubernetes Server
+
+tags:
+  - name: health
+    description: Health APIs
+  - name: write
+    description: Write APIs
+  - name: read
+    description: Read APIs
+
+paths:
+  /ping:
+    get:
+      description: Health check
+      operationId: healthCheck
+      tags:
+        - health
+      responses:
+        "200":
+          $ref: "#/components/responses/PingResponse"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /deep-ping:
+    get:
+      description: Deep health check
+      operationId: deepHealthCheck
+      tags:
+        - health
+      responses:
+        "200":
+          $ref: "#/components/responses/PingResponse"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /write:
+    post:
+      description: Write a message to a stream
+      operationId: write
+      tags:
+        - write
+      requestBody:
+        $ref: "#/components/requestBodies/MessageRequest"
+      responses:
+        "202":
+          $ref: "#/components/responses/Accepted"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /read/{streamName}:
+    get:
+      description: Read all the events from a stream
+      operationId: read
+      tags:
+        - read
+      parameters:
+        - $ref: "#/components/parameters/StreamName"
+        # TODO: add start index, count of messages
+      responses:
+        "200":
+          $ref: "#/components/responses/MessagesResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+  /readLast/{streamName}:
+    get:
+      description: Read the last message from a stream
+      operationId: readLastMessage
+      tags:
+        - read
+      parameters:
+        - $ref: "#/components/parameters/StreamName"
+      responses:
+        "200":
+          $ref: "#/components/responses/MessageResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+  /project/{streamName}:
+    get:
+      description: Read the projection of messages
+      operationId: project
+      tags:
+        - read
+      parameters:
+        - $ref: "#/components/parameters/StreamName"
+      responses:
+        "200":
+          $ref: "#/components/responses/ProjectionResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+components:
+  parameters:
+    StreamName:
+      name: streamName
+      in: path
+      required: true
+      schema:
+        type: string
+
+  requestBodies:
+    MessageRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Message"
+
+  responses:
+    Created:
+      description: Created
+    Accepted:
+      description: Accepted
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    MessageResponse:
+      description: Success
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Message"
+    MessagesResponse:
+      description: Success
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/Message"
+    ProjectionResponse:
+      description: Success
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Projection"
+    InternalServerError:
+      description: Internal Server Error
+    NoContent:
+      description: No Content
+    NotFound:
+      description: Not Found
+    PingResponse:
+      description: Success
+      content:
+        text/plain:
+          schema:
+            type: string
+    ServiceUnavailable:
+      description: Service Unavailable
+    Success:
+      description: OK
+
+  schemas:
+    Message:
+      type: object
+      required:
+        - id
+        - type
+        - streamName
+      properties:
+        id:
+          type: string
+          format: uuid
+        type:
+          type: string
+        streamName:
+          type: string
+        data:
+          type: object
+        metadata:
+          type: object
+    Error:
+      type: object
+      required:
+        - message
+      properties:
+        code:
+          type: number
+          format: int32
+        message:
+          type: string
+    Projection:
+      type: object

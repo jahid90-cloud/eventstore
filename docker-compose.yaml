@@ -1,0 +1,36 @@
+version: '3'
+
+networks:
+  traefik:
+    name: traefik
+    driver: bridge
+  backend:
+    name: backend
+    driver: bridge
+
+services:
+  openapi:
+    image: registry.jahiduls.mint/swaggerapi/swagger-ui:latest
+    container_name: event-store-openapi
+    restart: unless-stopped
+    networks:
+      - traefik
+    environment:
+      - BASE_URL=/explore
+      - SWAGGER_JSON=/var/specs/event-store.yaml
+    volumes:
+      - ./spec:/var/specs:ro
+    expose:
+      - 8080
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=traefik
+      - traefik.http.routers.event-store-openapi.rule=Host(`eventstore.jahiduls.mint`) && PathPrefix(`/explore`)
+      - traefik.http.routers.event-store-openapi.entrypoints=websecure
+      - traefik.http.routers.event-store-openapi.tls=true
+      - traefik.http.routers.event-store-openapi.service=event-store-openapi@docker
+      - traefik.http.routers.event-store-openapi-http.rule=Host(`eventstore.jahiduls.mint`) && PathPrefix(`/explore`)
+      - traefik.http.routers.event-store-openapi-http.entrypoints=web
+      # Defined by traefik container
+      - traefik.http.routers.event-store-openapi-http.middlewares=https-redirect
+      - traefik.http.services.event-store-openapi.loadbalancer.server.port=8080
