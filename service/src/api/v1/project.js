@@ -1,4 +1,4 @@
-const createProject = ({ eventStore }) => {
+const createProject = ({ config, eventStore }) => {
     const project = (req, res) => {
         return res.send('Projected');
     };

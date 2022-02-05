@@ -15,6 +15,7 @@ const createEnv = () => {
         appName: loadFromEnvironment('APP_NAME'),
         port: loadFromEnvironment('PORT'),
         isProduction: !isDevelopment,
+        eventstoreConnectionString: loadFromEnvironment('EVENTSTORE_CONNECTION_STRING'),
     };
 };
 

@@ -2,10 +2,10 @@ const createRead = require('./read');
 const createWrite = require('./write');
 const createSubscribe = require('./subscribe');
 
-const createEventStore = ({ config }) => {
-    const read = createRead({ config });
-    const write = createWrite({ config });
-    const subscribe = createSubscribe({ config });
+const createEventStore = ({ config, db }) => {
+    const read = createRead({ config, db });
+    const write = createWrite({ config, db });
+    const subscribe = createSubscribe({ config, db });
 
     return {
         read: read.read,

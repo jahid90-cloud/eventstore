@@ -1,6 +1,7 @@
-const createReadLastMessage = ({ eventStore }) => {
+const createReadLastMessage = ({ config, eventStore }) => {
     const readLastMessage = (req, res) => {
-        return res.send('Read Last Message');
+        const streamName = req.params.streamName;
+        return eventStore.readLastMessage({ streamName }).then((message) => res.json(message));
     };
 
     return readLastMessage;

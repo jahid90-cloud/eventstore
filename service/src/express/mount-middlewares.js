@@ -1,3 +1,5 @@
+const bodyParser = require('body-parser');
+
 const createAttachLocals = require('./attach-locals');
 const createFinalErrorHandler = require('./final-error-handler');
 const createPrimeRequestContext = require('./prime-request-context');
@@ -11,6 +13,8 @@ const createMountMiddlewares = ({ config }) => {
         app.use(finalErrorHandler);
         app.use(primeRequestContext);
         app.use(attachLocals);
+        app.use(bodyParser.urlencoded({ extended: false }));
+        app.use(bodyParser.json());
 
         config.logger.debug('Middlewares attached');
     };

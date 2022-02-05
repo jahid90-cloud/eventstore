@@ -1,4 +1,5 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 
 const createRead = require('./read');
 const createWrite = require('./write');
