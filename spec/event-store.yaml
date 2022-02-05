@@ -23,6 +23,8 @@ tags:
     description: Write APIs
   - name: read
     description: Read APIs
+  - name: v1
+    description: V1 APIs
 
 paths:
   /ping:
@@ -54,8 +56,9 @@ paths:
       operationId: write
       tags:
         - write
+        - v1
       requestBody:
-        $ref: "#/components/requestBodies/MessageRequest"
+        $ref: "#/components/requestBodies/WriteRequest"
       responses:
         "202":
           $ref: "#/components/responses/Accepted"
@@ -70,12 +73,13 @@ paths:
       operationId: read
       tags:
         - read
+        - v1
       parameters:
         - $ref: "#/components/parameters/StreamName"
         # TODO: add start index, count of messages
       responses:
         "200":
-          $ref: "#/components/responses/MessagesResponse"
+          $ref: "#/components/responses/ReadResponse"
         "400":
           $ref: "#/components/responses/BadRequest"
         "404":
@@ -88,28 +92,12 @@ paths:
       operationId: readLastMessage
       tags:
         - read
+        - v1
       parameters:
         - $ref: "#/components/parameters/StreamName"
       responses:
         "200":
-          $ref: "#/components/responses/MessageResponse"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "500":
-          $ref: "#/components/responses/InternalServerError"
-  /v1/project/{streamName}:
-    post:
-      description: Read the projection of messages
-      operationId: project
-      tags:
-        - read
-      parameters:
-        - $ref: "#/components/parameters/StreamName"
-      responses:
-        "200":
-          $ref: "#/components/responses/ProjectionResponse"
+          $ref: "#/components/responses/LastResponse"
         "400":
           $ref: "#/components/responses/BadRequest"
         "404":
@@ -127,7 +115,7 @@ components:
         type: string
 
   requestBodies:
-    MessageRequest:
+    WriteRequest:
       required: true
       content:
         application/json:
@@ -145,13 +133,13 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/Error"
-    MessageResponse:
+    LastResponse:
       description: Success
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/Message"
-    MessagesResponse:
+    ReadResponse:
       description: Success
       content:
         application/json:
@@ -159,12 +147,6 @@ components:
             type: array
             items:
               $ref: "#/components/schemas/Message"
-    ProjectionResponse:
-      description: Success
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/Projection"
     InternalServerError:
       description: Internal Server Error
     NoContent:
@@ -183,6 +165,16 @@ components:
       description: OK
 
   schemas:
+    Error:
+      type: object
+      required:
+        - message
+      properties:
+        code:
+          type: number
+          format: int32
+        message:
+          type: string
     Message:
       type: object
       required:
@@ -201,15 +193,3 @@ components:
           type: object
         metadata:
           type: object
-    Error:
-      type: object
-      required:
-        - message
-      properties:
-        code:
-          type: number
-          format: int32
-        message:
-          type: string
-    Projection:
-      type: object
