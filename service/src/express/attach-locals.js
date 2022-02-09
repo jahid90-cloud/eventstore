@@ -5,7 +5,7 @@ const createAttachLocals = ({ config }) => {
         next();
     };
 
-    config.logger.debug('Created attach locals');
+    config.logger.debug('Created attach http locals');
 
     return attachLocals;
 };

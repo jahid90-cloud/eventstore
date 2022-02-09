@@ -6,13 +6,28 @@ const createMountRoutes = require('./mount-routes');
 const createExpressApp = ({ env, config }) => {
     const app = express();
 
-    const mountMiddlewares = createMountMiddlewares({ config });
+    const mountMiddlewares = createMountMiddlewares({ env, config });
     const mountRoutes = createMountRoutes({ config });
 
     mountMiddlewares(app);
     mountRoutes(app);
 
-    return app;
+    const signalAppStart = () => {
+        config.logger.info(`Started rest server on port: ${env.port}`);
+    };
+
+    const start = () => {
+        app.listen(env.port, signalAppStart);
+    };
+
+    const stop = () => {
+        app.stop();
+    };
+
+    return {
+        start,
+        stop,
+    };
 };
 
 module.exports = createExpressApp;

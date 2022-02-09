@@ -59,7 +59,7 @@ services:
       - traefik.enable=true
       - traefik.docker.network=traefik
       - traefik.tcp.routers.eventstore.entrypoints=postgres
-      - traefik.tcp.routers.eventstore.rule=HostSNI(`eventstore.jahiduls.mint`)
+      - traefik.tcp.routers.eventstore.rule=HostSNI(`*`)
       - traefik.tcp.routers.eventstore.service=eventstore@docker
       - traefik.tcp.services.eventstore.loadbalancer.server.port=5432
 
@@ -78,6 +78,7 @@ services:
       - PORT=80
       - NODE_ENV=production
       - EVENTSTORE_CONNECTION_STRING=${EVENTSTORE_CONNECTION_STRING}
+      - GRPC_SERVER_ADDRESS=${GRPC_SERVER_ADDRESS}
     expose:
       - 80
     labels:

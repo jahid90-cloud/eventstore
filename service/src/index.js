@@ -1,17 +1,18 @@
 const createEnv = require('./env');
 const createConfig = require('./config');
-const createApp = require('./express');
+const createRestServer = require('./express');
+const createGrpcServer = require('./grpc');
 
 const start = () => {
     const env = createEnv();
     const config = createConfig({ env });
-    const app = createApp({ env, config });
+    const restServer = createRestServer({ env, config });
+    const grpcServer = createGrpcServer({ env, config });
 
-    const signalAppStart = () => {
-        config.logger.info(`${env.appName} started on port: ${env.port}`);
-    };
+    restServer.start();
+    grpcServer.start();
 
-    app.listen(env.port, signalAppStart);
+    setTimeout(() => grpcServer.testRunClient(), 2 * 1000);
 };
 
 module.exports = {

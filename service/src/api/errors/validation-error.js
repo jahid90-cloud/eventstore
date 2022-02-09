@@ -6,6 +6,7 @@ function ValidationError(errors, options, attributes, constraints) {
     this.attributes = attributes;
     this.constraints = constraints;
     this.name = 'ValidationError';
+    this.code = 400;
 }
 
 ValidationError.prototype = Object.create(Error.prototype);

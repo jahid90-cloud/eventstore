@@ -1,0 +1,9 @@
+module.exports = {
+    HTTP_STATUS_CREATED: 201,
+    HTTP_STATUS_ACCEPTED: 202,
+    HTTP_STATUS_BAD_REQUEST: 400,
+    HTTP_STATUS_UNAUTHORISED: 401, // actually, unauthenticated
+    HTTP_STATUS_FORBIDDEN: 403, // this one is unauthorised
+    HTTP_STATUS_NOT_FOUND: 404,
+    HTTP_STATUS_INTERNAL_SERVER_ERROR: 500,
+};

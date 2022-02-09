@@ -9,7 +9,7 @@ const createPrimeRequestContext = ({ config }) => {
         next();
     };
 
-    config.logger.debug('Created prime request context');
+    config.logger.debug('Created prime http request context');
 
     return primeRequestContext;
 };

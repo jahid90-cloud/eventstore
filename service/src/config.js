@@ -4,7 +4,8 @@ const createPostgresClient = require('./postgres-client');
 const createEventStore = require('../lib/event-store');
 
 const createPingService = require('./ping');
-const createV1Service = require('./api/v1');
+const createV1HttpService = require('./api/http/v1');
+const createV1GrpcService = require('./api/grpc/v1');
 
 const createConfig = ({ env }) => {
     const logger = createLogger({ env });
@@ -17,12 +18,14 @@ const createConfig = ({ env }) => {
     const eventStore = createEventStore({ config, db: postgresClient });
 
     const pingService = createPingService({ config });
-    const v1Service = createV1Service({ config, eventStore });
+    const v1HttpService = createV1HttpService({ config, eventStore });
+    const v1GrpcService = createV1GrpcService({ config, eventStore });
 
     return {
         ...config,
         pingService,
-        v1Service,
+        v1HttpService,
+        v1GrpcService,
     };
 };
 

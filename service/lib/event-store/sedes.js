@@ -1,5 +1,7 @@
 const createSedes = ({ config }) => {
     const deserialize = (message) => {
+        if (!message) return message;
+
         return {
             id: message.id,
             type: message.type,

@@ -17,7 +17,7 @@ const createHttpHandlers = ({ config, eventStore }) => {
     };
 };
 
-const createV1Service = ({ config, eventStore }) => {
+const createV1HttpService = ({ config, eventStore }) => {
     const handlers = createHttpHandlers({ config, eventStore });
 
     const router = express.Router();
@@ -30,4 +30,4 @@ const createV1Service = ({ config, eventStore }) => {
     };
 };
 
-module.exports = createV1Service;
+module.exports = createV1HttpService;

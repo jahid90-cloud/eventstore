@@ -1,10 +1,11 @@
 const bodyParser = require('body-parser');
+const cors = require('cors');
 
 const createAttachLocals = require('./attach-locals');
 const createFinalErrorHandler = require('./final-error-handler');
 const createPrimeRequestContext = require('./prime-request-context');
 
-const createMountMiddlewares = ({ config }) => {
+const createMountMiddlewares = ({ env, config }) => {
     const mountMiddlewares = (app) => {
         const finalErrorHandler = createFinalErrorHandler({ config });
         const primeRequestContext = createPrimeRequestContext({ config });
@@ -16,10 +17,12 @@ const createMountMiddlewares = ({ config }) => {
         app.use(bodyParser.urlencoded({ extended: false }));
         app.use(bodyParser.json());
 
-        config.logger.debug('Middlewares attached');
+        if (!env.isProduction) app.use(cors());
+
+        config.logger.debug('http middlewares mounted');
     };
 
-    config.logger.debug('Created mount middlewares');
+    config.logger.debug('Created mount http middlewares');
 
     return mountMiddlewares;
 };

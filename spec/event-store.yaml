@@ -9,7 +9,7 @@ info:
     url: https://opensource.org/licenses/MIT
 
 servers:
-  - url: http://localhost:8080/
+  - url: http://localhost:3000/
     description: Development Server
   - url: https://eventstore.jahiduls.mint/api/
     description: Docker Server

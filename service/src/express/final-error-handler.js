@@ -6,7 +6,7 @@ const createFinalErrorHandler = ({ config }) => {
         return res.status(500).send('Internal Server Error');
     };
 
-    config.logger.debug('Created final error handler');
+    config.logger.debug('Created final http error handler');
 
     return finalErrorHandler;
 };

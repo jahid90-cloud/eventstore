@@ -16,6 +16,7 @@ const createEnv = () => {
         port: loadFromEnvironment('PORT'),
         isProduction: !isDevelopment,
         eventstoreConnectionString: loadFromEnvironment('EVENTSTORE_CONNECTION_STRING'),
+        grpcAddress: loadFromEnvironment('GRPC_SERVER_ADDRESS'),
     };
 };
 

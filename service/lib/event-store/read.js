@@ -1,3 +1,5 @@
+const EventStoreError = require('./event-store-error');
+
 const createSedes = require('./sedes');
 const createStoreUtils = require('./store-utils');
 
@@ -63,79 +65,91 @@ const createRead = ({ config, db }) => {
     }) => {
         if (streamName === '$all') {
             if (condition) {
-                return db.then((client) =>
-                    client
-                        .query(GET_ALL_MESSAGES_WITH_CONDITION_SQL, [fromPosition, batchSize, condition])
-                        .then((res) => res.rows)
-                        .then((messages) => messages.map(deserialize))
-                );
+                return db
+                    .query(GET_ALL_MESSAGES_WITH_CONDITION_SQL, [fromPosition, batchSize, condition])
+                    .then((res) => res.rows)
+                    .then((messages) => messages.map(deserialize))
+                    .catch((err) => {
+                        throw new EventStoreError(err);
+                    });
             } else {
                 return db
-                    .then((client) => client.query(GET_ALL_MESSAGES_SQL, [fromPosition, batchSize]))
+                    .query(GET_ALL_MESSAGES_SQL, [fromPosition, batchSize])
                     .then((res) => res.rows)
-                    .then((messages) => messages.map(deserialize));
+                    .then((messages) => messages.map(deserialize))
+                    .catch((err) => {
+                        throw new EventStoreError(err);
+                    });
             }
         } else if (isCategory(streamName)) {
             if (condition) {
-                return db.then((client) =>
-                    client
-                        .query(GET_ALL_CATEGORY_MESSAGES_WITH_CONDITION_SQL, [
-                            streamName,
-                            fromPosition,
-                            batchSize,
-                            correlation,
-                            consumerGroupMember,
-                            consumerGroupSize,
-                            condition,
-                        ])
-                        .then((res) => res.rows)
-                        .then((messages) => messages.map(deserialize))
-                );
+                return db
+                    .query(GET_ALL_CATEGORY_MESSAGES_WITH_CONDITION_SQL, [
+                        streamName,
+                        fromPosition,
+                        batchSize,
+                        correlation,
+                        consumerGroupMember,
+                        consumerGroupSize,
+                        condition,
+                    ])
+                    .then((res) => res.rows)
+                    .then((messages) => messages.map(deserialize))
+                    .catch((err) => {
+                        throw new EventStoreError(err);
+                    });
             } else if (correlation) {
-                return db.then((client) =>
-                    client
-                        .query(GET_ALL_CATEGORY_MESSAGES_WITH_CORRELATION_SQL, [
-                            streamName,
-                            fromPosition,
-                            batchSize,
-                            correlation,
-                        ])
-                        .then((res) => res.rows)
-                        .then((messages) => messages.map(deserialize))
-                );
+                return db
+                    .query(GET_ALL_CATEGORY_MESSAGES_WITH_CORRELATION_SQL, [
+                        streamName,
+                        fromPosition,
+                        batchSize,
+                        correlation,
+                    ])
+                    .then((res) => res.rows)
+                    .then((messages) => messages.map(deserialize))
+                    .catch((err) => {
+                        throw new EventStoreError(err);
+                    });
             } else {
-                return db.then((client) =>
-                    client
-                        .query(GET_ALL_CATEGORY_MESSAGES_SQL, [streamName, fromPosition, batchSize])
-                        .then((res) => res.rows)
-                        .then((messages) => messages.map(deserialize))
-                );
+                return db
+                    .query(GET_ALL_CATEGORY_MESSAGES_SQL, [streamName, fromPosition, batchSize])
+                    .then((res) => res.rows)
+                    .then((messages) => messages.map(deserialize))
+                    .catch((err) => {
+                        throw new EventStoreError(err);
+                    });
             }
         } else {
             if (condition) {
-                return db.then((client) =>
-                    client
-                        .query(GET_ALL_MESSAGES_WITH_CONDITION_SQL, [streamName, fromPosition, batchSize, condition])
-                        .then((res) => res.rows)
-                        .then((messages) => messages.map(deserialize))
-                );
+                return db
+                    .query(GET_ALL_STREAM_MESSAGES_WITH_CONDITION_SQL, [streamName, fromPosition, batchSize, condition])
+                    .then((res) => res.rows)
+                    .then((messages) => messages.map(deserialize))
+                    .catch((err) => {
+                        throw new EventStoreError(err);
+                    });
             } else {
-                return db.then((client) =>
-                    client
-                        .query(GET_ALL_STREAM_MESSAGES_SQL, [streamName, fromPosition, batchSize])
-                        .then((res) => res.rows)
-                        .then((messages) => messages.map(deserialize))
-                );
+                return db
+                    .query(GET_ALL_STREAM_MESSAGES_SQL, [streamName, fromPosition, batchSize])
+                    .then((res) => res.rows)
+                    .then((messages) => messages.map(deserialize))
+                    .catch((err) => {
+                        throw new EventStoreError(err);
+                    });
             }
         }
     };
 
     const readLastMessage = ({ streamName }) => {
         return db
-            .then((client) => client.query(GET_LAST_STREAM_MESSAGE_SQL, [streamName]))
+            .query(GET_LAST_STREAM_MESSAGE_SQL, [streamName])
             .then((res) => res.rows)
             .then((rows) => rows[0])
-            .then(deserialize);
+            .then(deserialize)
+            .catch((err) => {
+                throw new EventStoreError(err);
+            });
     };
 
     return {

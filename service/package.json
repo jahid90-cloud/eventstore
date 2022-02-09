@@ -4,6 +4,7 @@
     "description": "EventStore backend as an interface to MessageDB",
     "main": "index.js",
     "scripts": {
+        "generate": "grpc_tools_node_protoc --js_out=import_style=commonjs,binary:src/gen --grpc_out=generate_package_definition:src/gen --plugin=protoc-gen-grpc=`which grpc_tools_node_protoc_plugin` --proto_path=../spec/v1 event-store.proto",
         "start-dev-server": "NODE_ENV=development nodemon bin/start-server --color",
         "start": "NODE_ENV=production node bin/start-server"
     },
@@ -14,16 +15,22 @@
     "author": "Jahid",
     "license": "MIT",
     "dependencies": {
+        "@grpc/grpc-js": "^1.5.4",
+        "@grpc/proto-loader": "^0.6.9",
         "bluebird": "^3.7.2",
         "body-parser": "^1.19.1",
         "camelcase-keys": "^7.0.2",
         "express": "^4.17.2",
+        "google-protobuf": "^3.19.4",
+        "grpc-promise": "^1.4.0",
         "pg": "^8.7.1",
         "uuid": "^8.3.2",
         "validate.js": "^0.13.1"
     },
     "devDependencies": {
+        "cors": "^2.8.5",
         "dotenv": "^16.0.0",
+        "grpc-tools": "^1.11.2",
         "nodemon": "^2.0.15"
     },
     "bin": {
