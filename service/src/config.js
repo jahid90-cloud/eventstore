@@ -3,7 +3,7 @@ const createLogger = require('./logger');
 const createPostgresClient = require('./postgres-client');
 const createEventStore = require('../lib/event-store');
 
-const createPingService = require('./ping');
+const createPingService = require('./api/http/ping');
 const createV1HttpService = require('./api/http/v1');
 const createV1GrpcService = require('./api/grpc/v1');
 
