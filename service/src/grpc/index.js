@@ -15,7 +15,7 @@ const createGrpcServer = ({ env, config }) => {
 
     const signalBindSuccess = () => {
         server.start();
-        config.logger.info(`Started grpc server at: ${env.grpcAddress}`);
+        config.logger.info(`Started ${env.appName} grpc server at: ${env.grpcAddress}`);
     };
 
     const start = () => {

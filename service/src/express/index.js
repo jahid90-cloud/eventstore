@@ -13,7 +13,7 @@ const createExpressApp = ({ env, config }) => {
     mountRoutes(app);
 
     const signalAppStart = () => {
-        config.logger.info(`Started rest server on port: ${env.port}`);
+        config.logger.info(`Started ${env.appName} rest server on port: ${env.port}`);
     };
 
     const start = () => {
