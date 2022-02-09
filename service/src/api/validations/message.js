@@ -10,8 +10,8 @@ const validateMessage = (context) => {
                 minimum: 1,
             },
             format: {
-                pattern: '[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}',
-                message: 'must be a uuid',
+                pattern: '[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}',
+                message: 'must be a uuid consisting of [a-f0-9]',
             },
         },
         type: {
@@ -32,7 +32,7 @@ const validateMessage = (context) => {
         },
     };
 
-    const validationErrors = validate(context, constraints);
+    const validationErrors = validate(context.attributes, constraints);
 
     if (validationErrors) {
         throw new ValidationError(validationErrors);

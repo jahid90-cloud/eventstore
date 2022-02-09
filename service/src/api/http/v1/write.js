@@ -30,7 +30,7 @@ const createWrite = ({ config, eventStore }) => {
         return Bluebird.resolve(context)
             .then(validateMessage)
             .then((context) => eventStore.write(context.attributes))
-            .then(() => res.send(HTTP_STATUS_ACCEPTED))
+            .then(() => res.sendStatus(HTTP_STATUS_ACCEPTED))
             .catch(ValidationError, (err) => res.status(HTTP_STATUS_BAD_REQUEST).send(new ApiError(err.message, 400)))
             .catch((err) => {
                 if (err.message && err.message.includes('duplicate key')) {

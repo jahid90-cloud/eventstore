@@ -19,7 +19,7 @@ const toEvsMessage = (c) => ({
 });
 
 const validateEvsMessage = (c) => {
-    validateMessage(c.attributes);
+    validateMessage(c);
 
     return c;
 };
