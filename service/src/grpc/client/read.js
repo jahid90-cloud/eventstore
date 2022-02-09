@@ -14,7 +14,13 @@ const createRead = ({ config }) => {
     const responseHandler = () => {
         return (err, response) => {
             if (err) config.logger.error(err.message);
-            else config.logger.info(response.getMessagesList().map(fromProtoMessage));
+            else
+                config.logger.info(
+                    response
+                        .getMessagesList()
+                        .map(fromProtoMessage)
+                        .reduce((a, b) => a + 1, 0)
+                );
         };
     };
 

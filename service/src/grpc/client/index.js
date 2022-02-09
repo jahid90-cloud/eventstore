@@ -18,7 +18,7 @@ const createClient = ({ env, config }) => {
     const testRun = () => {
         stub.last(last.newRequest(), last.responseHandler());
         stub.write(write.newRequest(), write.responseHandler());
-        // stub.read(read.newRequest(), read.responseHandler());
+        stub.read(read.newRequest(), read.responseHandler());
         stub.last(last.newRequest(), last.responseHandler());
     };
 

@@ -26,7 +26,7 @@ const createWrite = ({ config }) => {
 
     const responseHandler = () => {
         return (err, _) => {
-            if (err) config.logger.error(err);
+            if (err) config.logger.error(err.message);
             else config.logger.info('ok');
         };
     };

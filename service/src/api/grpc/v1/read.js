@@ -6,6 +6,17 @@ const ApiError = require('../../errors/api-error');
 const proto = require('../../../gen/event-store_pb');
 const { toProtoMessage } = require('./sedes');
 
+const extractAttributes = (c) => ({
+    ...c,
+    attributes: {
+        streamName: c.req.getStreamname(),
+    },
+});
+
+const readFromEventStore = (c) => {
+    return c.eventStore.read(c.attributes);
+};
+
 const toReadResponse = (messages) => {
     const res = new proto.ReadResponse();
     res.setMessagesList(messages);
@@ -13,21 +24,24 @@ const toReadResponse = (messages) => {
     return res;
 };
 
+const handleSuccess = (res, callback) => {
+    return callback(null, res);
+};
+
+const handleFailure = (err, callback) => {
+    return callback(new ApiError(err.message, 500), null);
+};
+
 const createRead = ({ config, eventStore }) => {
     const read = (call, callback) => {
-        const context = {
-            streamName: call.request.getStreamname(),
-        };
-
+        const context = { req: call.request, eventStore };
         return Bluebird.resolve(context)
-            .then(eventStore.read)
+            .then(extractAttributes)
+            .then(readFromEventStore)
             .then((messages) => messages.map(toProtoMessage))
             .then(toReadResponse)
-            .then((res) => callback(null, res))
-            .catch((err) => {
-                config.logger.error(err);
-                return callback(new ApiError(err.message, 500), null);
-            });
+            .then((res) => handleSuccess(res, callback))
+            .catch((err) => handleFailure(err, callback));
     };
 
     return read;
