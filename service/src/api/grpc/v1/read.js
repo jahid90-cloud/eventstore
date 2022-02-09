@@ -5,6 +5,7 @@ const ApiError = require('../../errors/api-error');
 
 const proto = require('../../../gen/event-store_pb');
 const { toProtoMessage } = require('./sedes');
+const sanitize = require('./sanitize');
 
 const extractAttributes = (c) => ({
     ...c,
@@ -38,6 +39,7 @@ const createRead = ({ config, eventStore }) => {
         return Bluebird.resolve(context)
             .then(extractAttributes)
             .then(readFromEventStore)
+            .then((messages) => messages.map(sanitize))
             .then((messages) => messages.map(toProtoMessage))
             .then(toReadResponse)
             .then((res) => handleSuccess(res, callback))

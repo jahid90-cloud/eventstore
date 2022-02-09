@@ -3,7 +3,7 @@ const createPrimeRequestContext = require('./prime-request-context');
 const createMiddlewares = ({ env, config }) => {
     const primeRequestContext = createPrimeRequestContext({ config });
 
-    config.logger.debug('grpc middlewares created');
+    config.logger.debug('Created grpc middlewares');
 
     return [primeRequestContext];
 };

@@ -1,5 +1,4 @@
 const path = require('path');
-
 const grpc = require('@grpc/grpc-js');
 
 const eventStorePackageDefinition = require('../gen/event-store_grpc_pb');

@@ -4,6 +4,7 @@ const ApiError = require('../../errors/api-error');
 
 const proto = require('../../../gen/event-store_pb');
 const { toProtoMessage } = require('./sedes');
+const sanitize = require('./sanitize');
 
 const extractAttributes = (c) => ({
     ...c,
@@ -28,7 +29,6 @@ const handleSuccess = (res, callback) => {
 };
 
 const handleFailure = (err, callback) => {
-    config.logger.error(err);
     return callback(new ApiError(err.message, 500), null);
 };
 
@@ -38,6 +38,7 @@ const createReadLastMessage = ({ config, eventStore }) => {
         return Bluebird.resolve(context)
             .then(extractAttributes)
             .then(readLastMessageFromEventStore)
+            .then(sanitize)
             .then(toProtoMessage)
             .then(toLastResponse)
             .then((res) => handleSuccess(res, callback))

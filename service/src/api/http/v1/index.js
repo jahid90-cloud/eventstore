@@ -25,6 +25,8 @@ const createV1HttpService = ({ config, eventStore }) => {
     router.get('/read/:streamName', handlers.handleRead);
     router.get('/last/:streamName', handlers.handleReadLastMessage);
 
+    config.logger.debug('Created v1 http service');
+
     return {
         router,
     };

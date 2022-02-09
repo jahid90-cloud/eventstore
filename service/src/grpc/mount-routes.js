@@ -16,6 +16,8 @@ const createMountRoutes = ({ config }) => {
             lastHandler = middleware.apply(lastHandler);
         });
 
+        config.logger.debug('grpc middlewares mounted');
+
         server.addService(protoDescriptor.v1.EventStore.service, {
             write: writeHandler,
             read: readHandler,

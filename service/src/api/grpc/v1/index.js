@@ -17,7 +17,7 @@ const createGrpcHandlers = ({ config, eventStore }) => {
 const createV1GrpcService = ({ config, eventStore }) => {
     const handlers = createGrpcHandlers({ config, eventStore });
 
-    config.logger.debug('Created v1 rpc service');
+    config.logger.debug('Created v1 grpc service');
 
     return {
         read: handlers.handleRead,
