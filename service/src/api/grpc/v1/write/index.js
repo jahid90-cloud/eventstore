@@ -1,4 +1,5 @@
 const Bluebird = require('bluebird');
+const { v4: uuid } = require('uuid');
 
 const ValidationError = require('../../../errors/validation-error');
 
@@ -7,6 +8,8 @@ const deserialize = require('./deserialize');
 const validateMessage = require('./validate-message');
 const hydrateMetadata = require('./hydrate-metadata');
 const handleSuccess = require('./handle-success');
+const handleFailure = require('./handle-failure');
+const handleValidationFailure = require('./handle-validation-failure');
 
 const createMiddlewares = ({ config }) => {
     const attachResponseMiddleware = {
@@ -30,8 +33,47 @@ const createActions = ({ config, eventStore }) => {
         return eventStore.write(c.attributes.message).then(() => c);
     };
 
+    const writeSuccessEvent = (c) => {
+        const clientId = c.clientId;
+        const event = {
+            id: uuid(),
+            type: 'Write',
+            streamName: `client-${clientId}`,
+            data: {
+                messageId: c.attributes.message.id,
+            },
+            metadata: {
+                clientId,
+                traceId: c.traceId,
+            },
+        };
+
+        return eventStore.write(event).then(() => c);
+    };
+
+    const writeFailedEvent = (c, err) => {
+        const clientId = c.clientId;
+        const event = {
+            id: uuid(),
+            type: 'WriteFailed',
+            streamName: `client-${clientId}`,
+            data: {
+                messageId: c.attributes.message.id,
+                reason: err.message,
+            },
+            metadata: {
+                clientId,
+                traceId: c.traceId,
+            },
+        };
+
+        return eventStore.write(event).then(() => c);
+    };
+
     return {
         writeStreamMessage,
+        writeSuccessEvent,
+        writeFailedEvent,
     };
 };
 
@@ -40,6 +82,7 @@ const createHandlers = ({ config, actions }) => {
         context = {
             ...context,
             config,
+            actions,
             request: call.request,
             callback,
         };

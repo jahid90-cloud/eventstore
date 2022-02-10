@@ -5,6 +5,7 @@ const createPrimeRequestContextMiddleware = ({ config }) => {
         return (call, callback, context) => {
             context = context || {};
             context.traceId = uuid();
+            context.clientId = 'unknown';
             handler(call, callback, context);
         };
     };
