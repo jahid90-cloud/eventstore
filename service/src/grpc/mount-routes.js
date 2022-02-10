@@ -6,14 +6,30 @@ const createMountRoutes = ({ config }) => {
     const service = config.v1GrpcService;
 
     const mountRoutes = (server, middlewares) => {
-        let writeHandler = service.write;
-        let readHandler = service.read;
-        let lastHandler = service.last;
+        // Extract the main handlers
+        let writeHandler = service.write.handlers.write;
+        let readHandler = service.read.handlers.read;
+        let lastHandler = service.last.handlers.readLastMessage;
 
-        middlewares.forEach((middleware) => {
-            writeHandler = middleware.apply(writeHandler);
-            readHandler = middleware.apply(readHandler);
-            lastHandler = middleware.apply(lastHandler);
+        // NOTE: handlers are invoked in reverse order of decoration
+        // If a decorator depends on another, it should be applied before the other
+
+        // Decorate with handler specific middlewares
+        service.write.middlewares.forEach((m) => {
+            writeHandler = m.apply(writeHandler);
+        });
+        service.read.middlewares.forEach((m) => {
+            readHandler = m.apply(readHandler);
+        });
+        service.last.middlewares.forEach((m) => {
+            lastHandler = m.apply(lastHandler);
+        });
+
+        // Decorate with common middlewares
+        middlewares.forEach((m) => {
+            writeHandler = m.apply(writeHandler);
+            readHandler = m.apply(readHandler);
+            lastHandler = m.apply(lastHandler);
         });
 
         config.logger.debug('grpc middlewares mounted');

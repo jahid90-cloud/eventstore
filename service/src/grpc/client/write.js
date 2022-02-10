@@ -1,7 +1,7 @@
 const { v4: uuid } = require('uuid');
 
 const proto = require('../../gen/event-store_pb');
-const { toProtoMessage } = require('../../api/grpc/v1/sedes');
+const { toProtoMessage } = require('../../api/grpc/v1/utils/sedes');
 
 const createWrite = ({ config }) => {
     const message = {

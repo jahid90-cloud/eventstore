@@ -1,5 +1,5 @@
 const proto = require('../../gen/event-store_pb');
-const { fromProtoMessage } = require('../../api/grpc/v1/sedes');
+const { fromProtoMessage } = require('../../api/grpc/v1/utils/sedes');
 
 const createRead = ({ config }) => {
     const sampleStreamName = 'write-123';

@@ -3,14 +3,14 @@ const createWrite = require('./write');
 const createReadLastMessage = require('./read-last-message');
 
 const createGrpcHandlers = ({ config, eventStore }) => {
-    const handleRead = createRead({ config, eventStore });
-    const handleReadLastMessage = createReadLastMessage({ config, eventStore });
-    const handleWrite = createWrite({ config, eventStore });
+    const read = createRead({ config, eventStore });
+    const last = createReadLastMessage({ config, eventStore });
+    const write = createWrite({ config, eventStore });
 
     return {
-        handleRead,
-        handleReadLastMessage,
-        handleWrite,
+        read,
+        last,
+        write,
     };
 };
 
@@ -20,9 +20,7 @@ const createV1GrpcService = ({ config, eventStore }) => {
     config.logger.debug('Created v1 grpc service');
 
     return {
-        read: handlers.handleRead,
-        last: handlers.handleReadLastMessage,
-        write: handlers.handleWrite,
+        ...handlers,
     };
 };
 

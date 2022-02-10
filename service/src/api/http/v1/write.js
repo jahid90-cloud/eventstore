@@ -5,7 +5,7 @@ const ValidationError = require('../../errors/validation-error');
 
 const { HTTP_STATUS_ACCEPTED, HTTP_STATUS_BAD_REQUEST } = require('./http-status');
 
-const validateMessage = require('../../validations/message');
+const validateMessage = require('../../utils/validations');
 
 const generateContextFromRequest = (req) => {
     const { id, type, streamName, data = {}, metadata = {} } = req.body;

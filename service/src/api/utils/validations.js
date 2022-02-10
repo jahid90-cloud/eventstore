@@ -2,7 +2,7 @@ const validate = require('validate.js');
 
 const ValidationError = require('../errors/validation-error');
 
-const validateMessage = (context) => {
+const validateMessage = (message) => {
     const constraints = {
         id: {
             presence: true,
@@ -32,13 +32,13 @@ const validateMessage = (context) => {
         },
     };
 
-    const validationErrors = validate(context.attributes, constraints);
+    const validationErrors = validate(message, constraints);
 
     if (validationErrors) {
         throw new ValidationError(validationErrors);
     }
 
-    return context;
+    return message;
 };
 
 module.exports = validateMessage;

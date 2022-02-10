@@ -2,13 +2,10 @@ const { v4: uuid } = require('uuid');
 
 const createPrimeRequestContextMiddleware = ({ config }) => {
     const apply = (handler) => {
-        return (call, callback) => {
-            call.request.context = {
-                ...call.request.context,
-                traceId: uuid(),
-            };
-
-            handler(call, callback);
+        return (call, callback, context) => {
+            context = context || {};
+            context.traceId = uuid();
+            handler(call, callback, context);
         };
     };
 
