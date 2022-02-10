@@ -12,6 +12,7 @@ volumes:
   eventstore-service-node-modules:
 
 services:
+
   openapi:
     image: registry.jahiduls.mint/swaggerapi/swagger-ui:latest
     container_name: eventstore-openapi
@@ -91,3 +92,60 @@ services:
       - traefik.http.routers.eventstore-service.middlewares=stripprefix-api@docker
       - traefik.http.services.eventstore-service.loadbalancer.server.port=80
       - traefik.http.middlewares.stripprefix-api.stripprefix.prefixes=/api
+
+
+  admin-app:
+    image: registry.jahiduls.mint/eventstore-admin-app:local
+    build: ./admin/frontend
+    container_name: eventstore-admin-app
+    restart: unless-stopped
+    networks:
+      - traefik
+      - backend
+    environment:
+      - NODE_ENV=production
+      - APP_NAME=Event Store Admin App
+      - PORT=80
+      - ENABLE_DEBUG=false
+      - COOKIE_SECRET=${COOKIE_SECRET}
+      - DATABASE_CONNECTION_STRING=${DATABASE_CONNECTION_STRING}
+      - MESSAGE_STORE_CONNECTION_STRING=${EVENTSTORE_CONNECTION_STRING}
+    expose:
+      - 80
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=traefik
+      - traefik.http.routers.eventstore-admin-app.entrypoints=websecure
+      - traefik.http.routers.eventstore-admin-app.rule=Host(`eventstore.jahiduls.mint`)
+      - traefik.http.routers.eventstore-admin-app.tls=true
+      - traefik.http.routers.eventstore-admin-app.service=eventstore-admin-app
+      - traefik.http.services.eventstore-admin-app.loadbalancer.server.port=80
+
+  admin-aggregators:
+    image: registry.jahiduls.mint/eventstore-admin-aggregators:local
+    build: ./admin/backend/aggregators
+    container_name: eventstore-admin-aggregators
+    restart: unless-stopped
+    networks:
+      - backend
+    environment:
+      - NODE_ENV=production
+      - ENABLE_DEBUG=false
+      - DATABASE_CONNECTION_STRING=${DATABASE_CONNECTION_STRING}
+      - MESSAGE_STORE_CONNECTION_STRING=${EVENTSTORE_CONNECTION_STRING}
+
+  admin-components:
+    image: registry.jahiduls.mint/eventstore-admin-components:local
+    build: ./admin/backend/components
+    container_name: eventstore-admin-components
+    restart: unless-stopped
+    networks:
+      - backend
+    environment:
+      - NODE_ENV=production
+      - ENABLE_DEBUG=false
+      - EMAIL_DIRECTORY=${EMAIL_DIRECTORY}
+      - SYSTEM_SENDER_EMAIL_ADDRESS=${SYSTEM_SENDER_EMAIL_ADDRESS}
+      - DATABASE_CONNECTION_STRING=${DATABASE_CONNECTION_STRING}
+      - MESSAGE_STORE_CONNECTION_STRING=${EVENTSTORE_CONNECTION_STRING}
+
