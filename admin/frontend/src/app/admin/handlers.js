@@ -33,25 +33,14 @@ const createHandlers = ({ actions, queries }) => {
     const handleShowUser = (req, res) => {
         const userPromise = queries.user(req.params.id);
         const loginEventsPromise = queries.userLoginEvents(req.params.id);
-        const viewingEventsPromise = queries.userViewingEvents(req.params.id);
-        const creatorEventsPromise = queries.userCreatorEvents(req.params.id);
 
-        return Promise.all([
-            userPromise,
-            loginEventsPromise,
-            viewingEventsPromise,
-            creatorEventsPromise,
-        ]).then((values) => {
+        return Promise.all([userPromise, loginEventsPromise]).then((values) => {
             const user = values[0];
             const loginEvents = values[1];
-            const viewingEvents = values[2];
-            const creatorEvents = values[3];
 
             return res.render('admin/templates/user', {
                 user,
                 loginEvents,
-                viewingEvents,
-                creatorEvents,
             });
         });
     };

@@ -16,31 +16,3 @@ block content
               td
                 a(href=`/admin/messages/${loginEvent.id}`)= loginEvent.type
               td= loginEvent.time
-  div
-    h2 Viewing Activity
-
-    if viewingEvents.length === 0
-      p.card-text No viewing activity
-    else
-      table.table
-        tbody
-          for viewingEvent in viewingEvents
-            tr
-              td
-                a(href=`/admin/videos/${viewingEvent.data.videoId}`)= viewingEvent.data.videoId
-              td= viewingEvent.time
-
-  div
-    h2 Creator Activity
-
-    if creatorEvents.length === 0
-      p.card-text No creator activity
-    else
-      table.table
-        tbody
-          for creatorEvent in creatorEvents
-            tr
-              td
-                a(href=`/admin/messages/${creatorEvent.id}`)= creatorEvent.type
-              td= creatorEvent.data.videoId
-              td= creatorEvent.time

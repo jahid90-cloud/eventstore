@@ -34,48 +34,6 @@ const createQueries = ({ db, messageStoreDb }) => {
             .then(camelCaseKeys);
     };
 
-    const userViewingEvents = (userId) => {
-        return messageStoreDb
-            .query(
-                `
-                SELECT
-                    *
-                FROM
-                    messages
-                WHERE
-                    category(stream_name) = 'viewing'
-                AND
-                    metadata->>'userId' = $1
-                ORDER BY
-                    global_position ASC
-            `,
-                [userId]
-            )
-            .then((res) => res.rows)
-            .then(camelCaseKeys);
-    };
-
-    const userCreatorEvents = (userId) => {
-        return messageStoreDb
-            .query(
-                `
-                SELECT
-                    *
-                FROM
-                    messages
-                WHERE
-                    category(stream_name) = 'videoPublishing:command'
-                AND
-                    metadata->>'userId' = $1
-                ORDER BY
-                    global_position ASC
-            `,
-                [userId]
-            )
-            .then((res) => res.rows)
-            .then(camelCaseKeys);
-    };
-
     const messages = () => {
         return messageStoreDb
             .query('SELECT * FROM messages ORDER BY global_position ASC')
@@ -249,8 +207,6 @@ const createQueries = ({ db, messageStoreDb }) => {
         usersIndex,
         user,
         userLoginEvents,
-        userViewingEvents,
-        userCreatorEvents,
         messages,
         messagesByType,
         correlatedMessages,
