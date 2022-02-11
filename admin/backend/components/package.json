@@ -1,7 +1,7 @@
 {
-    "name": "@jahid/videos-components",
+    "name": "@jahid/eventstore-admin-components",
     "version": "1.0.0",
-    "description": "Components for the videos app",
+    "description": "Components for the eventstore admin app",
     "main": "index.js",
     "scripts": {
         "start-dev-server": "NODE_ENV=development nodemon bin/start-server --color",

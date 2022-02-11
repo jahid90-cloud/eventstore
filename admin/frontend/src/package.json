@@ -1,7 +1,7 @@
 {
     "version": "1.0.0",
-    "name": "@jahid90/videos-app",
-    "description": "An event sourced videos app",
+    "name": "@jahid90/eventstore-admin-app",
+    "description": "An event sourced admin app for administering the event store",
     "scripts": {
         "start-dev-server": "NODE_ENV=development nodemon bin/start-server --color",
         "start": "NODE_ENV=production node bin/start-server"
@@ -28,7 +28,7 @@
     },
     "main": "app/index.js",
     "bin": {
-        "videos-app": "bin/start-server.js"
+        "eventstore-admin-app": "bin/start-server.js"
     },
     "author": "Jahid",
     "license": "ISC"
