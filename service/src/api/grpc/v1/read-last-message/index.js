@@ -48,7 +48,7 @@ const createActions = ({ config, eventStore }) => {
         const clientId = c.clientId;
         const event = {
             id: uuid(),
-            type: 'Last',
+            type: 'ReadLastSuccess',
             streamName: `client-${clientId}`,
             data: {
                 queriedStream: c.attributes.streamName,
@@ -66,7 +66,7 @@ const createActions = ({ config, eventStore }) => {
         const clientId = c.clientId;
         const event = {
             id: uuid(),
-            type: 'LastFailed',
+            type: 'ReadLastFailed',
             streamName: `client-${clientId}`,
             data: {
                 queriedStream: c.attributes.streamName,
@@ -85,7 +85,7 @@ const createActions = ({ config, eventStore }) => {
         const clientId = c.clientId;
         const event = {
             id: uuid(),
-            type: 'LastNotFound',
+            type: 'ReadLastNotFound',
             streamName: `client-${clientId}`,
             data: {
                 queriedStream: c.attributes.streamName,

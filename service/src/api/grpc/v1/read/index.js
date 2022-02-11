@@ -1,11 +1,15 @@
 const Bluebird = require('bluebird');
 const { v4: uuid } = require('uuid');
 
+const NotFoundError = require('../../../errors/not-found-error');
+
 const extractAttributes = require('./extract-attributes');
+const ensureMessagesFound = require('./ensure-messages-found');
 const sanitizeMessages = require('./sanitize-messages');
 const convertToProtoMessages = require('./convert-to-proto-messages');
 const updateResponse = require('./update-response');
 const handleSuccess = require('./handle-success');
+const handleNotFoundFailure = require('./handle-not-found-failure');
 const handleFailure = require('./handle-failure');
 
 const createMiddlewares = ({ config }) => {
@@ -44,7 +48,7 @@ const createActions = ({ config, eventStore }) => {
         const clientId = c.clientId;
         const event = {
             id: uuid(),
-            type: 'Read',
+            type: 'ReadSuccess',
             streamName: `client-${clientId}`,
             data: {
                 queriedStream: c.attributes.streamName,
@@ -77,9 +81,29 @@ const createActions = ({ config, eventStore }) => {
         return eventStore.write(event).then(() => c);
     };
 
+    const writeNotFoundEvent = (c, err) => {
+        const clientId = c.clientId;
+        const event = {
+            id: uuid(),
+            type: 'ReadNotFound',
+            streamName: `client-${clientId}`,
+            data: {
+                queriedStream: c.attributes.streamName,
+                reason: err.message,
+            },
+            metadata: {
+                clientId,
+                traceId: c.traceId,
+            },
+        };
+
+        return eventStore.write(event).then(() => c);
+    };
+
     return {
         writeSuccessEvent,
         writeFailedEvent,
+        writeNotFoundEvent,
     };
 };
 
@@ -97,11 +121,13 @@ const createHandlers = ({ config, queries, actions }) => {
         return Bluebird.resolve(context)
             .then(extractAttributes)
             .then(queries.readStreamMessages)
+            .then(ensureMessagesFound)
             .then(sanitizeMessages)
             .then(convertToProtoMessages)
             .then(updateResponse)
             .then(handleSuccess)
-            .catch((err) => handleFailure(err, context));
+            .then(NotFoundError, (err) => handleNotFoundFailure(context, err))
+            .catch((err) => handleFailure(context, err));
     };
 
     return {

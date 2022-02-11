@@ -13,7 +13,7 @@ const createLast = ({ config }) => {
 
     const responseHandler = () => {
         return (err, response) => {
-            if (err) config.logger.error(err);
+            if (err) config.logger.error(err.message);
             else config.logger.info(fromProtoMessage(response.getMessage()).id);
         };
     };

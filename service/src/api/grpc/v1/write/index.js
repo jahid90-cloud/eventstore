@@ -37,7 +37,7 @@ const createActions = ({ config, eventStore }) => {
         const clientId = c.clientId;
         const event = {
             id: uuid(),
-            type: 'Write',
+            type: 'WriteSuccess',
             streamName: `client-${clientId}`,
             data: {
                 messageId: c.attributes.message.id,
@@ -94,8 +94,8 @@ const createHandlers = ({ config, actions }) => {
             .then(hydrateMetadata)
             .then(actions.writeStreamMessage)
             .then(handleSuccess)
-            .catch(ValidationError, (err) => handleValidationFailure(err, context))
-            .catch((err) => handleFailure(err, context));
+            .catch(ValidationError, (err) => handleValidationFailure(context, err))
+            .catch((err) => handleFailure(context, err));
     };
 
     return {

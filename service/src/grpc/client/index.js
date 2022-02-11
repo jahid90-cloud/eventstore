@@ -19,8 +19,8 @@ const createClient = ({ env, config }) => {
         stub.read(read.newRequest(), read.responseHandler());
         stub.last(last.newRequest(), last.responseHandler());
         stub.write(write.newRequest(), write.responseHandler());
-        stub.read(read.newRequest(), read.responseHandler());
-        stub.last(last.newRequest(), last.responseHandler());
+        // stub.read(read.newRequest(), read.responseHandler());
+        // stub.last(last.newRequest(), last.responseHandler());
     };
 
     config.logger.debug('Created grpc client');

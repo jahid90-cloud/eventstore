@@ -1,6 +1,6 @@
 const ApiError = require('../../../errors/api-error');
 
-const handleFailure = (err, c) => {
+const handleFailure = (c, err) => {
     if (err.message && err.message.includes('duplicate key')) {
         c.callback(new ApiError('Message with duplicate id', 400), null);
     } else {

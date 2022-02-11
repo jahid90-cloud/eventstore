@@ -1,4 +1,5 @@
 const Bluebird = require('bluebird');
+const { v4: uuid } = require('uuid');
 
 const ValidationError = require('../../../errors/validation-error');
 
@@ -11,6 +12,14 @@ const handleFailure = require('./handle-failure');
 const createActions = ({ config, eventStore }) => {
     const writeStreamMessage = (c) => {
         return eventStore.write(c.attributes).then(() => c);
+    };
+
+    const writeSuccessEvent = (c) => {
+        const clientId = c.clientId;
+        const event = {
+            id: uuid(),
+            type: 'WriteSuccess',
+        };
     };
 
     return {

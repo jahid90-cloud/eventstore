@@ -1,6 +1,6 @@
 const ApiError = require('../../../errors/api-error');
 
-const handleValidationFailure = (err, c) => {
+const handleValidationFailure = (c, err) => {
     c.callback(new ApiError(err.message, 400));
     return c.actions.writeFailedEvent(c, err);
 };
