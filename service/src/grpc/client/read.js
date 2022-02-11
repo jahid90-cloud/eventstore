@@ -1,14 +1,23 @@
+const grpc = require('@grpc/grpc-js');
+
 const proto = require('../../gen/event-store_pb');
 const { fromProtoMessage } = require('../../api/grpc/v1/utils/sedes');
 
 const createRead = ({ config }) => {
-    const sampleStreamName = 'write-123';
+    const sampleStreamName = 'client-test-grpc-client';
 
     const newRequest = () => {
         const req = new proto.ReadRequest();
         req.setStreamname(sampleStreamName);
 
         return req;
+    };
+
+    const getMetadata = () => {
+        const metadata = new grpc.Metadata();
+        metadata.add('authorisation', 'Basic admin:password');
+        metadata.add('x-evs-client-id', 'test-grpc-client');
+        return metadata;
     };
 
     const responseHandler = () => {
@@ -26,6 +35,7 @@ const createRead = ({ config }) => {
 
     return {
         newRequest,
+        getMetadata,
         responseHandler,
     };
 };

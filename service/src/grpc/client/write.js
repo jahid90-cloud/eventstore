@@ -1,3 +1,4 @@
+const grpc = require('@grpc/grpc-js');
 const { v4: uuid } = require('uuid');
 
 const proto = require('../../gen/event-store_pb');
@@ -6,8 +7,8 @@ const { toProtoMessage } = require('../../api/grpc/v1/utils/sedes');
 const createWrite = ({ config }) => {
     const message = {
         id: uuid(),
-        type: 'Write',
-        streamName: 'write-123',
+        type: 'GrpcClientTest',
+        streamName: 'client-test-grpc-client',
         data: {
             foo: 1,
         },
@@ -24,6 +25,13 @@ const createWrite = ({ config }) => {
         return req;
     };
 
+    const getMetadata = () => {
+        const metadata = new grpc.Metadata();
+        metadata.add('authorisation', 'Basic admin:password');
+        metadata.add('x-evs-client-id', 'test-grpc-client');
+        return metadata;
+    };
+
     const responseHandler = () => {
         return (err, _) => {
             if (err) config.logger.error(err.message);
@@ -33,6 +41,7 @@ const createWrite = ({ config }) => {
 
     return {
         newRequest,
+        getMetadata,
         responseHandler,
     };
 };

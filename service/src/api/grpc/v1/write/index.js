@@ -2,6 +2,7 @@ const Bluebird = require('bluebird');
 const { v4: uuid } = require('uuid');
 
 const ValidationError = require('../../../errors/validation-error');
+const sanitize = require('../utils/sanitize');
 
 const extractAttributes = require('./extract-attributes');
 const deserialize = require('./deserialize');
@@ -58,7 +59,7 @@ const createActions = ({ config, eventStore }) => {
             type: 'WriteFailed',
             streamName: `client-${evs_clientId}`,
             data: {
-                messageId: c.attributes.message.id,
+                message: sanitize(c.attributes.message),
                 reason: err.message,
             },
             metadata: {
