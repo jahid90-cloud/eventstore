@@ -1,0 +1,23 @@
+extends ./admin-layout
+
+block content
+  h1 Component Read Positions
+
+  if positions.length === 0
+    p Nothing has reported in.  Generate more messages.  Register some more users or watch more videos.
+  else
+    table.table.table-hover
+      thead
+        tr
+          th(scope='col') Actions
+          th(scope='col') Subscriber Id
+          th(scope='col') Global Position
+      tbody
+        each position in positions
+          tr
+            td
+              form.form-inline(action=`/admin/subscriber-positions/reset/${position.id}` method='POST')
+                button.btn.btn-secondary(type='submit') Reset
+            td= position.id
+            td
+              a(href=`/admin/messages/${position.lastMessageId}`)= position.position

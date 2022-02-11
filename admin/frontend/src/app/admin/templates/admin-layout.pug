@@ -1,0 +1,66 @@
+doctype html
+head
+  title Admin - Video Tutorials
+
+  link(href="/css/fonts.css" rel="stylesheet")
+  link(href="/css/admin.bootstrap.min.css" rel="stylesheet")
+
+body
+  script(src="/js/app.js")
+
+  .container-fluid(style="margin-top: 30px")
+    .row
+      .col-sm-2
+
+        h4 Routes
+
+        ul.nav.flex-column
+          li.nav-item
+            a.nav-link(href='/') Home
+          li.nav-item
+            a.nav-link(href='/auth/log-out') Log out
+
+        hr
+
+        h4 Views
+
+        ul.nav.flex-column
+          li.nav-item
+            a.nav-link(href='/admin/users') Users
+        ul.nav.flex-column
+          li.nav-item
+            a.nav-link(href='/admin/events') Event Types
+        ul.nav.flex-column
+          li.nav-item
+            a.nav-link(href='/admin/entities') Entities
+        ul.nav.flex-column
+          li.nav-item
+            a.nav-link(href='/admin/views') All Views
+
+        hr
+
+        h4 Messages
+
+        ul.nav.flex-column
+          li.nav-item
+            a.nav-link(href='/admin/messages') Messages
+          li.nav-item
+            a.nav-link(href='/admin/streams') Streams
+          li.nav-item
+            a.nav-link(href='/admin/categories') Categories
+
+        hr
+
+        h4 System Health
+
+        ul.nav.flex-column
+          li.nav-item
+            a.nav-link(href='/admin/subscriber-positions') Component Read Positions
+      .col
+        block content
+
+
+  script(src="/js/jquery-3.2.1.slim.min.js")
+  script(src="/js/popper.min.js")
+  script(src="/js/bootstrap.bundle.min.js")
+  block behavior

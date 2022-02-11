@@ -1,0 +1,46 @@
+extends ./admin-layout
+
+block content
+  if !message
+    p Message #{message.id} not found!
+  else
+    h1 #{ title ? title : `Message ${message.id}` }
+
+    table.table.table-hover
+      tbody
+        tr
+          th(scope="row") id
+          td= message.id
+        tr
+          th(scope="row") global position
+          td= message.globalPosition
+        tr
+          th(scope="row") traceId
+          td
+            a(href=`/admin/correlated-messages/${message.metadata && message.metadata.traceId}`)= message.metadata && message.metadata.traceId
+        tr
+          th(scope="row") userId
+          td
+            a(href=`/admin/user-messages/${message.metadata && message.metadata.userId}`)= message.metadata && message.metadata.userId
+        tr
+          th(scope="row") stream name
+          td
+            a(href=`/admin/streams/${message.streamName}`)= message.streamName
+        tr
+          th(scope="row") category name
+          td
+            a(href=`/admin/categories/${message.category}`)= message.category
+        tr
+          th(scope="row") entity id
+          td
+            a(href=`/admin/entities/${message.identityId}`)= message.identityId
+        tr
+          th(scope="row") type
+          td
+            a(href=`/admin/type-messages/${message.type}`)= message.type
+        tr
+          th(scope="row") time
+          td= message.time
+
+    h2 Data
+    pre= JSON.stringify(message.data, null, 2)

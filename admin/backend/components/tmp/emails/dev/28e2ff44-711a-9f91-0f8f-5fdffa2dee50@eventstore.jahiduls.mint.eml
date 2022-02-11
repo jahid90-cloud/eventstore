@@ -1,0 +1,20 @@
+Content-Type: multipart/alternative;
+ boundary="--_NmP-a2e61780e7fbd78d-Part_1"
+From: noreply@eventstore.jahiduls.mint
+To: admin@mem.io
+Subject: Welcome to the site!
+Message-ID: <28e2ff44-711a-9f91-0f8f-5fdffa2dee50@eventstore.jahiduls.mint>
+Date: Fri, 11 Feb 2022 09:25:07 +0000
+MIME-Version: 1.0
+
+----_NmP-a2e61780e7fbd78d-Part_1
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+
+WELCOME TO THE SITE!
+----_NmP-a2e61780e7fbd78d-Part_1
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 7bit
+
+<h1>Welcome to the site!</h1>
+----_NmP-a2e61780e7fbd78d-Part_1--
