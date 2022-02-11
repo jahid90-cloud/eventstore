@@ -7,6 +7,7 @@ const handleFailure = (c, err) => {
     } else {
         c.next(err);
     }
+    return c.actions.writeFailedEvent(c, err);
 };
 
 module.exports = handleFailure;

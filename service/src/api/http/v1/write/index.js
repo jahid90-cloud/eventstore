@@ -2,6 +2,7 @@ const Bluebird = require('bluebird');
 const { v4: uuid } = require('uuid');
 
 const ValidationError = require('../../../errors/validation-error');
+const sanitize = require('../utils/sanitize');
 
 const extractAttributes = require('./extract-attributes');
 const validateMessage = require('./validate-message');
@@ -29,12 +30,73 @@ const createActions = ({ config, eventStore }) => {
             },
         };
 
-        return eventStore.write(event).then(() => c);
+        return eventStore
+            .write(event)
+            .then(() => c)
+            .catch((err) => {
+                console.log(err.message);
+                // Failure to write success event should not affect api flow
+                return c;
+            });
+    };
+
+    const writeValidationFailedEvent = (c, err) => {
+        const { evs_traceId, evs_clientId } = c.req.context;
+        const event = {
+            id: uuid(),
+            type: 'WriteValidationFailed',
+            streamName: `client-${evs_clientId}`,
+            data: {
+                message: sanitize(c.attributes),
+                reason: err.message,
+            },
+            metadata: {
+                evs_traceId,
+                evs_clientId,
+            },
+        };
+
+        return eventStore
+            .write(event)
+            .then(() => c)
+            .catch((err) => {
+                console.log(err.message);
+                // Failure to write success event should not affect api flow
+                return c;
+            });
+    };
+
+    const writeFailedEvent = (c, err) => {
+        const { evs_traceId, evs_clientId } = c.req.context;
+        const event = {
+            id: uuid(),
+            type: 'WriteFailed',
+            streamName: `client-${evs_clientId}`,
+            data: {
+                message: sanitize(c.attributes),
+                reason: err.message,
+            },
+            metadata: {
+                evs_traceId,
+                evs_clientId,
+            },
+        };
+
+        return eventStore
+            .write(event)
+            .then(() => c)
+            .catch((err) => {
+                console.log(err.message);
+                // Failure to write success event should not affect api flow
+                return c;
+            });
     };
 
     return {
         writeStreamMessage,
         writeSuccessEvent,
+        writeValidationFailedEvent,
+        writeFailedEvent,
     };
 };
 

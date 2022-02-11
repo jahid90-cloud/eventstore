@@ -13,10 +13,11 @@ const loadFromEnvironment = (key) => {
 const createEnv = () => {
     return {
         appName: loadFromEnvironment('APP_NAME'),
-        port: loadFromEnvironment('PORT'),
-        isProduction: !isDevelopment,
+        enableGrpcTestRun: loadFromEnvironment('ENABLE_GRPC_TEST_RUN') === '1',
         eventstoreConnectionString: loadFromEnvironment('EVENTSTORE_CONNECTION_STRING'),
         grpcAddress: loadFromEnvironment('GRPC_SERVER_ADDRESS'),
+        env: loadFromEnvironment('NODE_ENV'),
+        port: parseInt(loadFromEnvironment('PORT'), 10),
     };
 };
 
