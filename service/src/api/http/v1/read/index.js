@@ -30,7 +30,7 @@ const createActions = ({ config, eventStore }) => {
             .write(event)
             .then(() => c)
             .catch((err) => {
-                console.log(err.message);
+                config.logger.error(err.message);
                 // Failure to write success event should not affect api flow
                 return c;
             });
@@ -56,7 +56,7 @@ const createActions = ({ config, eventStore }) => {
             .write(event)
             .then(() => c)
             .catch((err) => {
-                console.log(err.message);
+                config.logger.error(err.message);
                 // Failure to write success event should not affect api flow
                 return c;
             });
@@ -82,7 +82,7 @@ const createActions = ({ config, eventStore }) => {
             .write(event)
             .then(() => c)
             .catch((err) => {
-                console.log(err.message);
+                config.logger.error(err.message);
                 // Failure to write success event should not affect api flow
                 return c;
             });

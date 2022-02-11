@@ -39,11 +39,6 @@ const createActions = ({ queries, services }) => {
             services,
         };
 
-        const tap = (a) => {
-            console.log(a);
-            return a;
-        };
-
         return Bluebird.resolve(context)
             .then(loadUserCredential)
             .then(ensureUserCredentialFound)
@@ -77,7 +72,6 @@ const createHandlers = ({ actions }) => {
         return actions
             .authenticate(traceId, email, password)
             .then((context) => {
-                console.log(context);
                 req.session.userId = context.userCredential.id;
                 req.session.role = context.userCredential.role;
                 res.redirect('/admin');

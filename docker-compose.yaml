@@ -41,8 +41,8 @@ services:
       context: ./database
       dockerfile: Dockerfile
       args:
-        - POSTGRES_VERSION=${POSTGRES_VERSION}
         - MESSAGE_DB_VERSION=${MESSAGE_DB_VERSION}
+        - POSTGRES_VERSION=${POSTGRES_VERSION}
     container_name: eventstore
     restart: unless-stopped
     networks:
@@ -51,9 +51,9 @@ services:
     volumes:
       - /data/docker/eventstore/data/pgdata:/bitnami/postgresql
     environment:
-      - POSTGRESQL_PASSWORD=password
-      - POSTGRES_VERSION=${POSTGRES_VERSION}
       - MESSAGE_DB_VERSION=${MESSAGE_DB_VERSION}
+      - POSTGRES_VERSION=${POSTGRES_VERSION}
+      - POSTGRESQL_PASSWORD=password
     expose:
       - 5432
     labels:
@@ -76,10 +76,11 @@ services:
       #- eventstore-service-node-modules:/app/node_modules
     environment:
       - APP_NAME=Event Store
-      - PORT=80
-      - NODE_ENV=production
+      - ENABLE_GRPC_TEST_RUN=${ENABLE_GRPC_TEST_RUN}
       - EVENTSTORE_CONNECTION_STRING=${EVENTSTORE_CONNECTION_STRING}
       - GRPC_SERVER_ADDRESS=${GRPC_SERVER_ADDRESS}
+      - NODE_ENV=production
+      - PORT=80
     expose:
       - 80
     labels:
@@ -103,13 +104,16 @@ services:
       - traefik
       - backend
     environment:
-      - NODE_ENV=production
       - APP_NAME=Event Store Admin App
-      - PORT=80
-      - ENABLE_DEBUG=false
       - COOKIE_SECRET=${COOKIE_SECRET}
       - DATABASE_CONNECTION_STRING=${DATABASE_CONNECTION_STRING}
+      - ENABLE_DEBUG=false
+      - EVENT_STORE_CLIENT_ID=evs-admin-app@prod
+      - EVENT_STORE_SERVICE_CREDENTIALS=admin-app:password
+      - EVENT_STORE_SERVICE_URL=http://eventstore-service
       - MESSAGE_STORE_CONNECTION_STRING=${EVENTSTORE_CONNECTION_STRING}
+      - NODE_ENV=production
+      - PORT=80
     expose:
       - 80
     labels:
@@ -142,10 +146,10 @@ services:
     networks:
       - backend
     environment:
-      - NODE_ENV=production
-      - ENABLE_DEBUG=false
-      - EMAIL_DIRECTORY=${EMAIL_DIRECTORY}
-      - SYSTEM_SENDER_EMAIL_ADDRESS=${SYSTEM_SENDER_EMAIL_ADDRESS}
       - DATABASE_CONNECTION_STRING=${DATABASE_CONNECTION_STRING}
+      - EMAIL_DIRECTORY=${EMAIL_DIRECTORY}
+      - ENABLE_DEBUG=false
       - MESSAGE_STORE_CONNECTION_STRING=${EVENTSTORE_CONNECTION_STRING}
+      - NODE_ENV=production
+      - SYSTEM_SENDER_EMAIL_ADDRESS=${SYSTEM_SENDER_EMAIL_ADDRESS}
 
