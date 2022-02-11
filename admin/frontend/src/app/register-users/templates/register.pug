@@ -2,6 +2,8 @@ extends ../../common-templates/layout
 
 block content
   h1 Register
+  if typeof errors === 'string'
+    .alert.alert-danger= errors
   form(action="/register" method="POST")
     input(name="id" type="hidden" value=userId)
     .form-group

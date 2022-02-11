@@ -57,6 +57,8 @@ paths:
       tags:
         - write
         - v1
+      parameters:
+        - $ref: "#/components/parameters/ClientId"
       requestBody:
         $ref: "#/components/requestBodies/WriteRequest"
       responses:
@@ -76,6 +78,7 @@ paths:
         - v1
       parameters:
         - $ref: "#/components/parameters/StreamName"
+        - $ref: "#/components/parameters/ClientId"
         # TODO: add start index, count of messages
       responses:
         "200":
@@ -95,6 +98,7 @@ paths:
         - v1
       parameters:
         - $ref: "#/components/parameters/StreamName"
+        - $ref: "#/components/parameters/ClientId"
       responses:
         "200":
           $ref: "#/components/responses/LastResponse"
@@ -113,6 +117,14 @@ components:
       required: true
       schema:
         type: string
+      example: client-explorer
+    ClientId:
+      name: x-evs-client-id
+      in: header
+      required: true
+      schema:
+        type: string
+      example: explorer
 
   requestBodies:
     WriteRequest:
@@ -187,8 +199,10 @@ components:
           format: uuid
         type:
           type: string
+          example: ExplorerTest
         streamName:
           type: string
+          example: client-explorer
         data:
           type: object
         metadata:

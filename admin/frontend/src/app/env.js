@@ -2,7 +2,7 @@ process.env.NODE_ENV === 'development' && require('dotenv').config();
 
 const packageJson = require('../package.json');
 
-const requireFromEnv = (key) => {
+const loadFromEnv = (key) => {
     if (!process.env[key]) {
         console.error(`Required environment variable [${key}] not found`);
         process.exit(-1);
@@ -12,14 +12,17 @@ const requireFromEnv = (key) => {
 };
 
 module.exports = {
-    appName: requireFromEnv('APP_NAME'),
-    enableDebug: requireFromEnv('ENABLE_DEBUG') === 'true',
-    databaseUrl: requireFromEnv('DATABASE_CONNECTION_STRING'),
-    messageStoreConnectionString: requireFromEnv(
-        'MESSAGE_STORE_CONNECTION_STRING'
+    appName: loadFromEnv('APP_NAME'),
+    cookieSecret: loadFromEnv('COOKIE_SECRET'),
+    databaseUrl: loadFromEnv('DATABASE_CONNECTION_STRING'),
+    enableDebug: loadFromEnv('ENABLE_DEBUG') === 'true',
+    env: loadFromEnv('NODE_ENV'),
+    eventStoreClientId: loadFromEnv('EVENT_STORE_CLIENT_ID'),
+    eventStoreServiceUrl: loadFromEnv('EVENT_STORE_SERVICE_URL'),
+    eventStoreServiceCredentials: loadFromEnv(
+        'EVENT_STORE_SERVICE_CREDENTIALS'
     ),
-    env: requireFromEnv('NODE_ENV'),
-    port: parseInt(requireFromEnv('PORT'), 10),
-    cookieSecret: requireFromEnv('COOKIE_SECRET'),
+    messageStoreUrl: loadFromEnv('MESSAGE_STORE_CONNECTION_STRING'),
+    port: parseInt(loadFromEnv('PORT'), 10),
     version: packageJson.version,
 };

@@ -1,13 +1,13 @@
+const bodyParser = require('body-parser');
 const express = require('express');
 
 const createQueries = require('./queries');
 const createActions = require('./actions');
 const createHandlers = require('./handlers');
-const bodyParser = require('body-parser');
 
-const createAdminApplication = ({ db, messageStoreDb, messageStore }) => {
-    const queries = createQueries({ db, messageStoreDb });
-    const actions = createActions({ db, messageStore, messageStoreDb });
+const createAdminApplication = ({ db, mdb, services }) => {
+    const queries = createQueries({ db, mdb });
+    const actions = createActions({ db, mdb, services });
     const handlers = createHandlers({ actions, queries });
 
     const router = express.Router();

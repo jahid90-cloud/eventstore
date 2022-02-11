@@ -21,11 +21,13 @@ const createQueries = ({ config, eventStore }) => {
 };
 
 const createHandlers = ({ config, queries }) => {
-    const readLastMessage = (req, res) => {
+    const readLastMessage = (req, res, next) => {
         const context = {
             config,
             queries,
-            attributes: {},
+            req,
+            res,
+            next,
         };
 
         return Bluebird.resolve(context)

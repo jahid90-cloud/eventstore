@@ -4,6 +4,7 @@ const writeLoggedInEvent = (context) => {
     const event = {
         id: uuid(),
         type: 'UserLoggedIn',
+        streamName: `authentication-${context.userCredential.id}`,
         metadata: {
             traceId: context.traceId,
             userId: context.userCredential.id,
@@ -13,9 +14,13 @@ const writeLoggedInEvent = (context) => {
         },
     };
 
-    const streamName = `authentication-${context.userCredential.id}`;
-
-    return context.messageStore.write(streamName, event).then(() => context);
+    return context.services.eventStore
+        .writeMessage(event)
+        .then(() => context)
+        .catch(({ status, statusText, data }) => {
+            console.error(status, statusText, data);
+            return context;
+        });
 };
 
 module.exports = writeLoggedInEvent;

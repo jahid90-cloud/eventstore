@@ -25,13 +25,14 @@ const createQueries = ({ db }) => {
     };
 };
 
-const createActions = ({ messageStore, queries }) => {
-    const addAdminPrivilege = (traceId, email) => {
+const createActions = ({ queries, services }) => {
+    const addAdminPrivilege = (userId, traceId, email) => {
         const context = {
+            userId,
             traceId,
             email,
-            messageStore,
             queries,
+            services,
         };
 
         return Bluebird.resolve(context)
@@ -41,12 +42,13 @@ const createActions = ({ messageStore, queries }) => {
             .catch(NotFoundError, () => handleUserNotFound(context));
     };
 
-    const removeAdminPrivilege = (traceId, email) => {
+    const removeAdminPrivilege = (userId, traceId, email) => {
         const context = {
+            userId,
             traceId,
             email,
-            messageStore,
             queries,
+            services,
         };
 
         return Bluebird.resolve(context)
@@ -65,19 +67,19 @@ const createActions = ({ messageStore, queries }) => {
 const createHandlers = ({ actions }) => {
     const handleAdminPrivilegeAdd = (req, res) => {
         const { email } = req.body;
-        const { traceId } = req.context;
+        const { userId, traceId } = req.context;
 
         return actions
-            .addAdminPrivilege(traceId, email)
+            .addAdminPrivilege(userId, traceId, email)
             .then(() => res.redirect('/admin/users'));
     };
 
     const handleAdminPrivilegeRemoval = (req, res) => {
         const { email } = req.body;
-        const { traceId } = req.context;
+        const { userId, traceId } = req.context;
 
         return actions
-            .removeAdminPrivilege(traceId, email)
+            .removeAdminPrivilege(userId, traceId, email)
             .then(() => res.redirect('/admin/users'));
     };
 
@@ -87,9 +89,9 @@ const createHandlers = ({ actions }) => {
     };
 };
 
-const build = ({ db, messageStore }) => {
+const build = ({ db, services }) => {
     const queries = createQueries({ db });
-    const actions = createActions({ messageStore, queries });
+    const actions = createActions({ queries, services });
     const handlers = createHandlers({ actions });
 
     const router = express.Router();

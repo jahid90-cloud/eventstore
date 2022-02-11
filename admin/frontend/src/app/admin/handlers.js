@@ -60,9 +60,10 @@ const createHandlers = ({ actions, queries }) => {
 
     const handleCorrelatedMessagesIndex = (req, res) => {
         const traceId = req.params.traceId;
+        const isEvsContext = (req.query.evs && req.query.evs === '1') || false;
 
         return queries
-            .correlatedMessages(traceId)
+            .correlatedMessages(traceId, isEvsContext)
             .then((messages) =>
                 renderPaginatedMessages(
                     req,
@@ -76,12 +77,10 @@ const createHandlers = ({ actions, queries }) => {
 
     const handleUserMessagesIndex = (req, res) => {
         const userId = req.params.userId;
-        const pageFromReq =
-            (req.query.page && parseInt(req.query.page, 10)) || 1;
-        const perPage = 10;
+        const isEvsContext = (req.query.evs && req.query.evs === '1') || false;
 
         return queries
-            .userMessages(userId)
+            .userMessages(userId, isEvsContext)
             .then((messages) =>
                 renderPaginatedMessages(
                     req,

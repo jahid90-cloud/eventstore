@@ -34,17 +34,17 @@ const createActions = ({ config, eventStore }) => {
     };
 
     const writeSuccessEvent = (c) => {
-        const clientId = c.clientId;
+        const { evs_traceId, evs_clientId } = c;
         const event = {
             id: uuid(),
             type: 'WriteSuccess',
-            streamName: `client-${clientId}`,
+            streamName: `client-${evs_clientId}`,
             data: {
                 messageId: c.attributes.message.id,
             },
             metadata: {
-                clientId,
-                traceId: c.traceId,
+                evs_traceId,
+                evs_clientId,
             },
         };
 
@@ -52,18 +52,18 @@ const createActions = ({ config, eventStore }) => {
     };
 
     const writeFailedEvent = (c, err) => {
-        const clientId = c.clientId;
+        const { evs_traceId, evs_clientId } = c;
         const event = {
             id: uuid(),
             type: 'WriteFailed',
-            streamName: `client-${clientId}`,
+            streamName: `client-${evs_clientId}`,
             data: {
                 messageId: c.attributes.message.id,
                 reason: err.message,
             },
             metadata: {
-                clientId,
-                traceId: c.traceId,
+                evs_traceId,
+                evs_clientId,
             },
         };
 

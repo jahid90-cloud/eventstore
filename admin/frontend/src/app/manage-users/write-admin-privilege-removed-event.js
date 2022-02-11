@@ -4,6 +4,7 @@ const writeAdminPrivilegeRemovedEvent = (context) => {
     const event = {
         id: uuid(),
         type: 'AdminPrivilegeRemoved',
+        streamName: `identity-${context.user.id}`,
         metadata: {
             traceId: context.traceId,
             userId: context.user.id,
@@ -12,9 +13,8 @@ const writeAdminPrivilegeRemovedEvent = (context) => {
             userId: context.user.id,
         },
     };
-    const streamName = `identity-${context.user.id}`;
 
-    return context.messageStore.write(streamName, event);
+    return context.services.eventStore.writeMessage(event).then(() => context);
 };
 
 module.exports = writeAdminPrivilegeRemovedEvent;

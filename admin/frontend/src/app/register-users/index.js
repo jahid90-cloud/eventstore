@@ -5,11 +5,13 @@ const express = require('express');
 const { v4: uuid } = require('uuid');
 
 const ValidationError = require('../errors/validation-error');
+
 const validate = require('./validate');
 const loadExistingIdentity = require('./load-existing-identity');
 const ensureThereWasNoExistingIdentity = require('./ensure-there-was-no-existing-identity');
 const hashPassword = require('./hash-password');
 const writeRegisterCommand = require('./write-register-command');
+const ServiceError = require('../errors/service-error');
 
 const createQueries = ({ db }) => {
     const byEmail = (email) => {
@@ -26,9 +28,9 @@ const createQueries = ({ db }) => {
     };
 };
 
-const createActions = ({ messageStore, queries }) => {
+const createActions = ({ services, queries }) => {
     const registerUser = (traceId, attributes) => {
-        const context = { attributes, traceId, messageStore, queries };
+        const context = { attributes, traceId, services, queries };
 
         return Bluebird.resolve(context)
             .then(validate)
@@ -70,6 +72,12 @@ const createHandlers = ({ actions }) => {
                     errors: err.errors,
                 })
             )
+            .catch(ServiceError, (err) =>
+                res.status(500).render('register-users/templates/register', {
+                    userId: attributes.id,
+                    errors: 'Internal Service Error. Please try again later.',
+                })
+            )
             .catch(next);
     };
 
@@ -80,9 +88,9 @@ const createHandlers = ({ actions }) => {
     };
 };
 
-const build = ({ db, messageStore }) => {
+const build = ({ db, services }) => {
     const queries = createQueries({ db });
-    const actions = createActions({ messageStore, queries });
+    const actions = createActions({ services, queries });
     const handlers = createHandlers({ actions });
 
     const router = express.Router();

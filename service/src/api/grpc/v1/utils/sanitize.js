@@ -1,5 +1,10 @@
 const sanitize = (message) => {
-    message.metadata && message.metadata.evsTraceId && delete message.metadata.evsTraceId;
+    message.metadata &&
+        Object.entries(message.metadata).forEach(([key, value]) => {
+            if (key.startsWith('evs-')) {
+                delete message.metadata[key];
+            }
+        });
     return message;
 };
 

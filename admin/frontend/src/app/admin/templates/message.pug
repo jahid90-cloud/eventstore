@@ -23,6 +23,14 @@ block content
           td
             a(href=`/admin/user-messages/${message.metadata && message.metadata.userId}`)= message.metadata && message.metadata.userId
         tr
+          th(scope="row") evs trace id
+          td
+            a(href=`/admin/correlated-messages/${message.metadata && message.metadata.evs_traceId}?evs=1`)= message.metadata && message.metadata.evs_traceId
+        tr
+          th(scope="row") evs client id
+          td
+            a(href=`/admin/user-messages/${message.metadata && message.metadata.evs_clientId}?evs=1`)= message.metadata && message.metadata.evs_clientId
+        tr
           th(scope="row") stream name
           td
             a(href=`/admin/streams/${message.streamName}`)= message.streamName

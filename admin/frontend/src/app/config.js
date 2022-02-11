@@ -1,6 +1,6 @@
 const createKnexClient = require('./knex-client');
-const createPostgresClient = require('./postgres-client');
-const createMessageStore = require('@jahid90/message-store');
+
+const createEventStoreService = require('./services/event-store-service');
 
 const createHomeApp = require('./home');
 const createAdminApp = require('./admin');
@@ -11,35 +11,38 @@ const createManageUsersApp = require('./manage-users');
 const createConfig = ({ env }) => {
     const knexClient = createKnexClient({
         connectionString: env.databaseUrl,
-        isDevelopment: env.env === 'development',
+        parseAsJson: env.env === 'development',
     });
-    const postgresClient = createPostgresClient({
-        connectionString: env.messageStoreConnectionString,
+    const mdbClient = createKnexClient({
+        connectionString: env.messageStoreUrl,
+        parseAsJson: false,
     });
-    const messageStore = createMessageStore({ db: postgresClient });
+
+    const eventStoreService = createEventStoreService({ env });
+    const services = { eventStore: eventStoreService };
 
     const homeApp = createHomeApp();
     const adminApp = createAdminApp({
         db: knexClient,
-        messageStoreDb: postgresClient,
-        messageStore,
+        mdb: mdbClient,
+        services,
     });
     const registerUsersApp = createRegisterUsersApp({
         db: knexClient,
-        messageStore,
+        services,
     });
     const authenticationApp = createAuthenticationApp({
         db: knexClient,
-        messageStore,
+        services,
     });
     const manageUsersApp = createManageUsersApp({
         db: knexClient,
-        messageStore,
+        mdb: mdbClient,
+        services,
     });
 
     return {
-        knexClient,
-        messageStore,
+        eventStoreService,
         homeApp,
         adminApp,
         registerUsersApp,

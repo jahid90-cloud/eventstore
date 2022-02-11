@@ -1,32 +1,31 @@
-const Bluebird = require('bluebird');
 const camelcaseKeys = require('camelcase-keys');
 const { v4: uuid } = require('uuid');
 
-const createActions = ({ db, messageStore, messageStoreDb }) => {
+const createActions = ({ db, mdb, services }) => {
     const resendMessage = (messageId) => {
-        return messageStoreDb
-            .query(
-                `
-            SELECT * FROM messages WHERE id = $1 LIMIT 1
-        `,
-                [messageId]
+        return mdb
+            .then((client) =>
+                client('messages').where({ id: messageId }).limit(1)
             )
-            .then((res) => res.rows)
-            .then((rows) => rows[0])
             .then(camelcaseKeys)
+            .then((rows) => rows[0])
             .then((message) => {
                 const messageCopy = {
                     id: uuid(),
                     type: message.type,
+                    streamName: message.streamName,
                     metadata: {
                         ...message.metadata,
-                        originMessageId: message.id,
+                        copyOf: message.id,
                     },
                     data: message.data || {},
                 };
 
-                return messageStore.write(message.streamName, messageCopy);
-            });
+                return services.eventStore.writeMessage(messageCopy);
+            })
+            .catch(({ status, statusText, data }) =>
+                console.error(status, statusText, data)
+            );
     };
 
     const clearView = (view) => {
@@ -34,24 +33,24 @@ const createActions = ({ db, messageStore, messageStoreDb }) => {
     };
 
     const deleteMessage = (id) => {
-        return messageStoreDb.query('DELETE FROM messages WHERE id = $1', [id]);
+        return mdb.then((client) => client('messages').delete().where({ id }));
     };
 
     const deleteAllMessages = (ids) => {
-        return Bluebird.each(ids, (id) => {
-            return messageStoreDb.query('DELETE FROM messages WHERE id = $1', [
-                id,
-            ]);
-        });
+        return mdb
+            .then((client) =>
+                client('messages').delete().whereRaw('id = ANY(?)', [ids])
+            )
+            .catch(console.error);
     };
 
     const resetSubscriberPosition = (context) => {
         const { traceId, userId, subscriberId } = context;
-        const streamName = `subscriberPosition:command-${subscriberId}`;
 
         const resetCommand = {
             id: uuid(),
             type: 'ResetPosition',
+            streamName: `subscriberPosition:command-${subscriberId}`,
             metadata: {
                 traceId,
                 userId,
@@ -61,7 +60,7 @@ const createActions = ({ db, messageStore, messageStoreDb }) => {
             },
         };
 
-        return messageStore.write(streamName, resetCommand);
+        return services.eventStore.writeMessage(resetCommand);
     };
 
     return {

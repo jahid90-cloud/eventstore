@@ -6,6 +6,7 @@ const handleCredentialMismatch = (context) => {
     const event = {
         id: uuid(),
         type: 'UserLoginFailed',
+        streamName: `authentication-${context.userCredential.id}`,
         metadata: {
             traceId: context.traceId,
             userId: null,
@@ -16,9 +17,7 @@ const handleCredentialMismatch = (context) => {
         },
     };
 
-    const streamName = `authentication-${context.userCredential.id}`;
-
-    return context.messageStore.write(streamName, event).then(() => {
+    return context.services.eventStore.writeMessage(event).then(() => {
         throw new AuthenticationError();
     });
 };

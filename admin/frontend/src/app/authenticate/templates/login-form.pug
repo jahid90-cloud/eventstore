@@ -2,6 +2,8 @@ extends ../../common-templates/layout
 
 block content
   h1 Log in
+  if errors
+    .alert.alert-danger Incorrect email or password. Please try again.
   form(action="/auth/log-in" method="POST")
     .form-group
       label(for="email") Email

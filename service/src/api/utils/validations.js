@@ -26,7 +26,7 @@ const validateMessage = (message) => {
                 minimum: 1,
             },
             format: {
-                pattern: '[a-z]+-[a-z0-9-]+',
+                pattern: '[a-z:]+-[a-z0-9-]+',
                 message: 'must be of the form <category-identifier>',
             },
         },

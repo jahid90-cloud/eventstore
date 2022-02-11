@@ -1,7 +1,7 @@
 const Bluebird = require('bluebird');
 const camelCaseKeys = require('camelcase-keys');
 
-const createQueries = ({ db, messageStoreDb }) => {
+const createQueries = ({ db, mdb }) => {
     const usersIndex = () => {
         return db
             .then((client) => client('admin_users').orderBy('email', 'ASC'))
@@ -16,76 +16,66 @@ const createQueries = ({ db, messageStoreDb }) => {
     };
 
     const userLoginEvents = (userId) => {
-        return messageStoreDb
-            .query(
-                `
-                SELECT
-                    *
-                FROM
-                    messages
-                WHERE
-                    stream_name=$1
-                ORDER BY
-                    global_position ASC
-            `,
-                [`authentication-${userId}`]
+        return mdb
+            .then((client) =>
+                client('messages').where({
+                    stream_name: `authentication-${userId}`,
+                })
             )
-            .then((res) => res.rows)
             .then(camelCaseKeys);
     };
 
     const messages = () => {
-        return messageStoreDb
-            .query('SELECT * FROM messages ORDER BY global_position ASC')
-            .then((res) => res.rows)
+        return mdb
+            .then((client) =>
+                client('messages').orderBy('global_position', 'asc')
+            )
             .then(camelCaseKeys);
     };
 
-    const correlatedMessages = (traceId) => {
-        return messageStoreDb
-            .query(
-                `SELECT * FROM messages WHERE metadata->>'traceId' = $1 ORDER BY global_position ASC`,
-                [traceId]
+    const correlatedMessages = (traceId, isEvsContext) => {
+        const metaField = isEvsContext ? 'evs_traceId' : 'traceId';
+
+        return mdb
+            .then((client) =>
+                client('messages')
+                    .whereRaw('metadata->>? = ?', [metaField, traceId])
+                    .orderBy('global_position', 'asc')
             )
-            .then((res) => res.rows)
             .then(camelCaseKeys);
     };
 
-    const userMessages = (userId) => {
-        return messageStoreDb
-            .query(
-                `SELECT * from messages WHERE metadata->>'userId' = $1 ORDER BY global_position ASC`,
-                [userId]
+    const userMessages = (userId, isEvsContext) => {
+        const metaField = isEvsContext ? 'evs_clientId' : 'userId';
+
+        return mdb
+            .then((client) =>
+                client('messages')
+                    .whereRaw('metadata->>? = ?', [metaField, userId])
+                    .orderBy('global_position', 'asc')
             )
-            .then((res) => res.rows)
             .then(camelCaseKeys);
     };
 
     const streamName = (streamName) => {
-        return messageStoreDb
-            .query(
-                `
-                SELECT
-                    *
-                FROM
-                    messages
-                WHERE
-                    stream_name = $1
-                ORDER BY
-                    global_position ASC
-            `,
-                [streamName]
+        return mdb
+            .then((client) =>
+                client('messages')
+                    .where({ stream_name: streamName })
+                    .orderBy('global_position', 'asc')
             )
-            .then((res) => res.rows)
             .then(camelCaseKeys);
     };
 
     const message = (id) => {
-        return messageStoreDb
-            .query('SELECT * FROM messages WHERE id = $1', [id])
-            .then((res) => res.rows)
-            .then(camelCaseKeys)
-            .then((rows) => rows[0]);
+        return mdb
+            .then((client) =>
+                client('messages')
+                    .where({ id })
+                    .orderBy('global_position', 'asc')
+            )
+            .then((rows) => rows[0])
+            .then(camelCaseKeys);
     };
 
     const streams = () => {
@@ -111,40 +101,22 @@ const createQueries = ({ db, messageStoreDb }) => {
     };
 
     const categoryName = (categoryName) => {
-        return messageStoreDb
-            .query(
-                `
-                SELECT
-                    *
-                FROM
-                    messages
-                WHERE
-                    stream_name LIKE $1
-                ORDER BY
-                    global_position ASC
-            `,
-                [categoryName + '-%']
+        return mdb
+            .then((client) =>
+                client('messages')
+                    .whereRaw('stream_name LIKE ?', [categoryName + '-%'])
+                    .orderBy('global_position', 'asc')
             )
-            .then((res) => res.rows)
             .then(camelCaseKeys);
     };
 
     const messagesByType = (type) => {
-        return messageStoreDb
-            .query(
-                `
-            SELECT
-                *
-            FROM
-                messages
-            WHERE
-                type LIKE $1
-            ORDER BY
-                global_position ASC
-        `,
-                [type]
+        return mdb
+            .then((client) =>
+                client('messages')
+                    .whereRaw('type LIKE ?', [type])
+                    .orderBy('global_position', 'asc')
             )
-            .then((res) => res.rows)
             .then(camelCaseKeys);
     };
 
@@ -175,21 +147,12 @@ const createQueries = ({ db, messageStoreDb }) => {
     };
 
     const entityMessages = (identityId) => {
-        return messageStoreDb
-            .query(
-                `
-                SELECT
-                    *
-                FROM
-                    messages
-                WHERE
-                    stream_name LIKE $1
-                ORDER BY
-                    global_position
-            `,
-                ['%' + identityId]
+        return mdb
+            .then((client) =>
+                client('messages')
+                    .whereRaw('stream_name LIKE ?', ['%' + identityId])
+                    .orderBy('global_position', 'asc')
             )
-            .then((res) => res.rows)
             .then(camelCaseKeys);
     };
 

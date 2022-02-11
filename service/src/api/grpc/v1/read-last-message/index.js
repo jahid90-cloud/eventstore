@@ -45,17 +45,17 @@ const createQueries = ({ config, eventStore }) => {
 
 const createActions = ({ config, eventStore }) => {
     const writeSuccessEvent = (c) => {
-        const clientId = c.clientId;
+        const { evs_traceId, evs_clientId } = c;
         const event = {
             id: uuid(),
             type: 'ReadLastSuccess',
-            streamName: `client-${clientId}`,
+            streamName: `client-${evs_clientId}`,
             data: {
                 queriedStream: c.attributes.streamName,
             },
             metadata: {
-                clientId,
-                traceId: c.traceId,
+                evs_traceId,
+                evs_clientId,
             },
         };
 
@@ -63,18 +63,18 @@ const createActions = ({ config, eventStore }) => {
     };
 
     const writeFailedEvent = (c, err) => {
-        const clientId = c.clientId;
+        const { evs_traceId, evs_clientId } = c;
         const event = {
             id: uuid(),
             type: 'ReadLastFailed',
-            streamName: `client-${clientId}`,
+            streamName: `client-${evs_clientId}`,
             data: {
                 queriedStream: c.attributes.streamName,
                 reason: err.message,
             },
             metadata: {
-                clientId,
-                traceId: c.traceId,
+                evs_traceId,
+                evs_clientId,
             },
         };
 
@@ -82,18 +82,18 @@ const createActions = ({ config, eventStore }) => {
     };
 
     const writeNotFoundEvent = (c, err) => {
-        const clientId = c.clientId;
+        const { evs_traceId, evs_clientId } = c;
         const event = {
             id: uuid(),
             type: 'ReadLastNotFound',
-            streamName: `client-${clientId}`,
+            streamName: `client-${evs_clientId}`,
             data: {
                 queriedStream: c.attributes.streamName,
                 reason: err.message,
             },
             metadata: {
-                clientId,
-                traceId: c.traceId,
+                evs_traceId,
+                evs_clientId,
             },
         };
 

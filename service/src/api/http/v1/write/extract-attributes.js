@@ -1,5 +1,6 @@
 const extractAttributes = (c) => {
-    const { id, type, streamName, data = {}, metadata = {} } = req.body;
+    const { id, type, streamName, data = {}, metadata = {} } = c.req.body;
+    const { evs_traceId, evs_clientId } = c.req.context;
     c.attributes = {
         id,
         type,
@@ -7,7 +8,8 @@ const extractAttributes = (c) => {
         data,
         metadata: {
             ...metadata,
-            evsTraceId: (c.req.context && c.req.context.traceId) || 'None',
+            evs_traceId,
+            evs_clientId,
         },
     };
     return c;

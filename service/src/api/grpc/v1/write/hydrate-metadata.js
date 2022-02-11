@@ -1,5 +1,10 @@
 const hydrateMetadata = (c) => {
-    c.attributes.message.metadata.evsTraceId = c.traceId;
+    const { evs_traceId, evs_clientId } = c;
+    c.attributes.message.metadata = {
+        ...c.attributes.message.metadata,
+        evs_traceId,
+        evs_clientId,
+    };
     return c;
 };
 

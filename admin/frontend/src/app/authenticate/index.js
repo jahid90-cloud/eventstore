@@ -29,14 +29,19 @@ const createQueries = ({ db }) => {
     };
 };
 
-const createActions = ({ messageStore, queries }) => {
+const createActions = ({ queries, services }) => {
     const authenticate = (traceId, email, password) => {
         const context = {
             traceId,
             email,
-            messageStore,
             password,
             queries,
+            services,
+        };
+
+        const tap = (a) => {
+            console.log(a);
+            return a;
         };
 
         return Bluebird.resolve(context)
@@ -72,9 +77,10 @@ const createHandlers = ({ actions }) => {
         return actions
             .authenticate(traceId, email, password)
             .then((context) => {
+                console.log(context);
                 req.session.userId = context.userCredential.id;
                 req.session.role = context.userCredential.role;
-                res.redirect('/');
+                res.redirect('/admin');
             })
             .catch(AuthenticationError, () =>
                 res.status(401).render('authenticate/templates/login-form', {
@@ -91,9 +97,9 @@ const createHandlers = ({ actions }) => {
     };
 };
 
-const build = ({ db, messageStore }) => {
+const build = ({ db, services }) => {
     const queries = createQueries({ db });
-    const actions = createActions({ messageStore, queries });
+    const actions = createActions({ queries, services });
     const handlers = createHandlers({ actions });
 
     const router = express.Router();

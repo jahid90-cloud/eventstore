@@ -15,15 +15,26 @@ const createActions = ({ config, eventStore }) => {
     };
 
     const writeSuccessEvent = (c) => {
-        const clientId = c.clientId;
+        const { evs_traceId, evs_clientId } = c.req.context;
         const event = {
             id: uuid(),
             type: 'WriteSuccess',
+            streamName: `client-${evs_clientId}`,
+            data: {
+                messageId: c.attributes.id,
+            },
+            metadata: {
+                evs_traceId,
+                evs_clientId,
+            },
         };
+
+        return eventStore.write(event).then(() => c);
     };
 
     return {
         writeStreamMessage,
+        writeSuccessEvent,
     };
 };
 

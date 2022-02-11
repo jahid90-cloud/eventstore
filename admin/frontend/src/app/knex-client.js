@@ -1,8 +1,8 @@
 const Bluebird = require('bluebird');
 const knex = require('knex');
 
-const createKnexClient = ({ connectionString, isDevelopment }) => {
-    if (isDevelopment) {
+const createKnexClient = ({ connectionString, parseAsJson }) => {
+    if (parseAsJson) {
         connectionString = JSON.parse(connectionString);
     }
 

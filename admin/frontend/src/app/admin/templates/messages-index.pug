@@ -32,23 +32,22 @@ block content
     table.table.table-hover
       thead
         tr
-          th(scope='col' colspan='2') action
+          th(scope='col') action
           th(scope='col') id
           th(scope='col') globalPosition
-          th(scope='col') traceId
-          th(scope='col') userId
+          th(scope='col') traceId / userId
+          th(scope='col') evsTraceId / evsClientId
           th(scope='col') stream name
-          th(scope='col') category
-          th(scope='col') identity id
+          th(scope='col') category / identity id
           th(scope='col') type
-          th(scope='col') time)
+          th(scope='col') time
       tbody
         each message in messages
           tr
-            td
+            td.text-center
               form.form-inline(action=`/admin/messages/${message.id}?_method=DELETE` method='POST')
                 button.btn.btn-secondary(type='submit') delete
-            td
+              <hr />
               form.form-inline(action=`/admin/messages/${message.id}` method='POST')
                 button.btn.btn-secondary(type='submit') resend
             td
@@ -56,13 +55,17 @@ block content
             td= message.globalPosition
             td
               a(href=`/admin/correlated-messages/${message.metadata && message.metadata.traceId}`)= message.metadata && message.metadata.traceId
-            td
+              span &nbsp; / &nbsp;
               a(href=`/admin/user-messages/${message.metadata && message.metadata.userId}`)= message.metadata && message.metadata.userId
+            td
+              a(href=`/admin/correlated-messages/${message.metadata && message.metadata.evs_traceId}?evs=1`)= message.metadata && message.metadata.evs_traceId
+              span &nbsp; / &nbsp;
+              a(href=`/admin/user-messages/${message.metadata && message.metadata.evs_clientId}?evs=1`)= message.metadata && message.metadata.evs_clientId
             td
               a(href=`/admin/streams/${message.streamName}`)= message.streamName
             td
               a(href=`/admin/categories/${message.category}`)= message.category
-            td
+              span &nbsp; / &nbsp;
               a(href=`/admin/entities/${message.identityId}`)= message.identityId
             td
               a(href=`/admin/type-messages/${message.type}`)= message.type
