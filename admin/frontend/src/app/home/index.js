@@ -2,7 +2,7 @@ const express = require('express');
 
 const createHandlers = () => {
     const home = (req, res, next) => {
-        if (req.session.userId) res.redirect('/admin/users');
+        if (req.session.userId) return res.redirect('/admin/users');
         return res.render('home/templates/home');
     };
 
