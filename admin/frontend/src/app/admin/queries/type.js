@@ -1,11 +1,14 @@
 const camelCaseKeys = require('camelcase-keys');
 
 const createTypeQueries = ({ db, mdb }) => {
-    const messagesByType = (type) => {
+    const messagesByType = (type, category) => {
         return mdb
             .then((client) =>
                 client('messages')
-                    .whereRaw('type LIKE ?', [type])
+                    .whereRaw('type LIKE ? AND category(stream_name) LIKE ?', [
+                        type,
+                        category,
+                    ])
                     .orderBy('global_position', 'asc')
             )
             .then(camelCaseKeys);

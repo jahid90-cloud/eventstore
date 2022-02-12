@@ -45,7 +45,7 @@ block content
         tr
           th(scope="row") type
           td
-            a(href=`/admin/type-messages/${message.type}`)= message.type
+            a(href=`/admin/type-messages/${message.type}?c=${message.category}`)= message.type
         tr
           th(scope="row") time
           td= message.time

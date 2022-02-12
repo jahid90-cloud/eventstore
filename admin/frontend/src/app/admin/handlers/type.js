@@ -3,9 +3,10 @@ const { renderPaginatedMessages } = require('./utils');
 const createTypeHandlers = ({ actions, queries }) => {
     const handleMessagesOfType = (req, res) => {
         const { type } = req.params;
+        const { c: category } = req.query;
 
         return queries
-            .messagesByType(type)
+            .messagesByType(type, category)
             .then((messages) =>
                 renderPaginatedMessages(
                     req,

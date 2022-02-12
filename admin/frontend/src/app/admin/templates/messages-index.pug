@@ -68,5 +68,5 @@ block content
               span &nbsp; / &nbsp;
               a(href=`/admin/entities/${message.identityId}`)= message.identityId
             td
-              a(href=`/admin/type-messages/${message.type}`)= message.type
+              a(href=`/admin/type-messages/${message.type}?c=${message.category}`)= message.type
             td= message.time

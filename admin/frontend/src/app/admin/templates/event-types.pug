@@ -17,7 +17,7 @@ block content
         each eventType in eventTypes
           tr
             td
-              a(href=`/admin/type-messages/${eventType.type}`)= eventType.type
+              a(href=`/admin/type-messages/${eventType.type}?c=${eventType.streamName}`)= eventType.type
             td
               a(href=`/admin/categories/${eventType.streamName}`)= eventType.streamName
             td= eventType.messageCount
