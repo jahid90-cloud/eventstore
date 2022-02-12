@@ -8,6 +8,7 @@ const createPrimeRequestContextMiddleware = ({ config }) => {
                     Array.isArray(call.metadata.get('x-evs-client-id')) &&
                     call.metadata.get('x-evs-client-id')[0]) ||
                 'unknown';
+
             context = {
                 ...context,
                 evs_traceId: uuid(),
