@@ -2,6 +2,9 @@ const validate = require('validate.js');
 
 const ValidationError = require('../errors/validation-error');
 
+const ID_PATTERN = '[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}';
+const STREAM_NAME_PATTERN = '[a-zA-Z:]+-[a-zA-Z0-9:-]+';
+
 const validateMessage = (message) => {
     const constraints = {
         id: {
@@ -10,8 +13,8 @@ const validateMessage = (message) => {
                 minimum: 1,
             },
             format: {
-                pattern: '[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}',
-                message: 'must be a uuid consisting of [a-f0-9]',
+                pattern: ID_PATTERN,
+                message: `must be a uuid matching regex ${ID_PATTERN}`,
             },
         },
         type: {
@@ -26,8 +29,8 @@ const validateMessage = (message) => {
                 minimum: 1,
             },
             format: {
-                pattern: '[a-z:]+-[a-z0-9-]+',
-                message: 'must be of the form <category-identifier>',
+                pattern: STREAM_NAME_PATTERN,
+                message: `must be of the form <category-identifier> and match regex ${STREAM_NAME_PATTERN}`,
             },
         },
     };

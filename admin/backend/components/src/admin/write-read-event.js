@@ -17,7 +17,15 @@ const writeReadEvent = (context) => {
     };
     const streamName = `subscriberPosition-${command.metadata.subscriberId}`;
 
-    return messageStore.write(streamName, event);
+    return messageStore
+        .write(streamName, event)
+        .then(() => context)
+        .catch((err) => {
+            const { status, statusText, data } = err.response;
+            console.error(status, statusText, data);
+            // Failed to write the workflow event; rethrow to indicate flow failure
+            throw err;
+        });
 };
 
 module.exports = writeReadEvent;

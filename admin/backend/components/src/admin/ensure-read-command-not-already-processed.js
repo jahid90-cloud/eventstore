@@ -1,8 +1,6 @@
-const env = require('../env');
-
 const CommandAlreadyProcessedError = require('./command-already-processed-error');
 
-const ensureCommandNotAlreadyProcessed = (context) => {
+const ensureReadCommandNotAlreadyProcessed = (context) => {
     const { subscriberPosition, command } = context;
 
     if (subscriberPosition.sequence > command.globalPosition) {
@@ -12,4 +10,4 @@ const ensureCommandNotAlreadyProcessed = (context) => {
     return context;
 };
 
-module.exports = ensureCommandNotAlreadyProcessed;
+module.exports = ensureReadCommandNotAlreadyProcessed;

@@ -9,16 +9,24 @@ const writePositionResetFailedEvent = (context, err) => {
         metadata: {
             traceId: command.metadata.traceId,
             userId: command.metadata.userId,
+            subscriberId: command.metadata.subscriberId,
         },
         data: {
-            position: 0,
-            lastMessageId: null,
+            messageId: command.id,
             reason: err.message,
         },
     };
     const streamName = `subscriberPosition-${command.data.subscriberId}`;
 
-    return messageStore.write(streamName, event);
+    return messageStore
+        .write(streamName, event)
+        .then(() => context)
+        .catch((err) => {
+            const { status, statusText, data } = err.response;
+            console.error(status, statusText, data);
+            // Don't let flow fail because of tracing event
+            return context;
+        });
 };
 
 module.exports = writePositionResetFailedEvent;

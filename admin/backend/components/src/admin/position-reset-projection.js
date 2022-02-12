@@ -1,14 +1,14 @@
-const subscriberPositionProjection = {
+const positionResetProjection = {
     $init: () => {
         return {
             sequence: 0,
         };
     },
-    Read: (projection, event) => {
+    PositionReset: (projection, event) => {
         projection.sequence = event.globalPosition;
 
         return projection;
     },
 };
 
-module.exports = subscriberPositionProjection;
+module.exports = positionResetProjection;

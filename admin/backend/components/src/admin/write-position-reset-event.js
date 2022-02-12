@@ -12,13 +12,21 @@ const writePositionResetEvent = (context) => {
             subscriberId: command.data.subscriberId,
         },
         data: {
-            position: 0,
-            lastMessageId: null,
+            position: command.data.position,
+            lastMessageId: command.data.lastMessageId,
         },
     };
-    const streamName = `subscriberPosition-${command.data.subscriberId}`;
+    const streamName = `subscriberPosition-${command.metadata.subscriberId}`;
 
-    return messageStore.write(streamName, event);
+    return messageStore
+        .write(streamName, event)
+        .then(() => context)
+        .catch((err) => {
+            const { status, statusText, data } = err.response;
+            console.error(status, statusText, data);
+            // Don't let flow fail because of tracing event
+            return context;
+        });
 };
 
 module.exports = writePositionResetEvent;

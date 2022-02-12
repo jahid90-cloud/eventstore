@@ -61,13 +61,21 @@ const createActions = ({ db, mdb, services }) => {
             metadata: {
                 traceId,
                 userId,
+                subscriberId,
             },
             data: {
-                subscriberId,
+                position: 0,
+                lastMessageId: null,
             },
         };
 
-        return services.eventStore.writeMessage(resetCommand);
+        return services.eventStore
+            .writeMessage(resetCommand)
+            .then(() => context)
+            .catch((err) => {
+                const { status, statusText, data } = err.response;
+                console.error(status, statusText, data);
+            });
     };
 
     return {

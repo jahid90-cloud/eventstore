@@ -18,7 +18,15 @@ const writeReadEvent = (context, err) => {
     };
     const streamName = `subscriberPosition-${command.data.subscriberId}`;
 
-    return messageStore.write(streamName, event);
+    return messageStore
+        .write(streamName, event)
+        .then(() => context)
+        .catch((err) => {
+            const { status, statusText, data } = err.response;
+            console.error(status, statusText, data);
+            // Don't let flow fail because of tracing event
+            return context;
+        });
 };
 
 module.exports = writeReadEvent;
