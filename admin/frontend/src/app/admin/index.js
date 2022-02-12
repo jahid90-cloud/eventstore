@@ -16,11 +16,15 @@ const createAdminApplication = ({ db, mdb, services }) => {
     router.route('/users').get(handlers.handleUsersIndex);
     router.route('/users/:id').get(handlers.handleShowUser);
 
-    router.route('/messages/:id').get(handlers.handleShowMessage);
-    router.route('/messages').get(handlers.handleMessagesIndex);
-    router.route('/messages/:id').delete(handlers.handleDeleteMessage);
-    router.route('/messages').delete(handlers.handleDeleteAllMessages);
-    router.route('/messages/:id').post(handlers.handleResendMessage);
+    router
+        .route('/messages')
+        .get(handlers.handleMessagesIndex)
+        .delete(handlers.handleDeleteAllMessages);
+    router
+        .route('/messages/:id')
+        .get(handlers.handleShowMessage)
+        .delete(handlers.handleDeleteMessage)
+        .post(handlers.handleResendMessage);
 
     router
         .route('/correlated-messages/:traceId')
@@ -44,14 +48,16 @@ const createAdminApplication = ({ db, mdb, services }) => {
 
     router.route('/type-messages/:type').get(handlers.handleMessagesOfType);
 
-    router.route('/views').get(handlers.handleViewsIndex);
-    router.route('/views').post(handlers.handleClearAllViews);
+    router
+        .route('/views')
+        .get(handlers.handleViewsIndex)
+        .post(handlers.handleClearAllViews);
     router.route('/views/:name').post(handlers.handleClearView);
 
     router.route('/entities').get(handlers.handleEntitiesIndex);
     router.route('/entities/:id').get(handlers.handleEntityMessagesIndex);
 
-    router.route('/events').get(handlers.handleShowEventTypes);
+    router.route('/events').get(handlers.handleEventTypesIndex);
 
     return {
         router,

@@ -9,7 +9,7 @@ const category = (streamName) => {
     return streamName.split('-')[0];
 };
 
-const identityId = (streamName) => {
+const identityFromStream = (streamName) => {
     // Double equals to catch null and undefined
     if (streamName == null) {
         return '';
@@ -54,7 +54,7 @@ const renderPaginatedMessages = (req, res, messages, viewName, title) => {
             return {
                 ...message,
                 category: category(message.streamName),
-                identityId: identityId(message.streamName),
+                identityId: identityFromStream(message.streamName),
             };
         });
 
@@ -70,4 +70,8 @@ const renderPaginatedMessages = (req, res, messages, viewName, title) => {
     });
 };
 
-module.exports = renderPaginatedMessages;
+module.exports = {
+    category,
+    identityFromStream,
+    renderPaginatedMessages,
+};

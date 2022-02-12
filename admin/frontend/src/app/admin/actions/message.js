@@ -1,8 +1,7 @@
-const Bluebird = require('bluebird');
 const camelcaseKeys = require('camelcase-keys');
 const { v4: uuid } = require('uuid');
 
-const createActions = ({ db, mdb, services }) => {
+const createMessageActions = ({ mdb, services }) => {
     const resendMessage = (messageId) => {
         return mdb
             .then((client) =>
@@ -29,16 +28,6 @@ const createActions = ({ db, mdb, services }) => {
             );
     };
 
-    const clearView = (view) => {
-        return db.then((client) => client(view).delete());
-    };
-
-    const clearAllViews = (views) => {
-        return Bluebird.resolve(views)
-            .then((views) => views.map((view) => view.name))
-            .then((views) => views.map(clearView));
-    };
-
     const deleteMessage = (id) => {
         return mdb.then((client) => client('messages').delete().where({ id }));
     };
@@ -51,41 +40,11 @@ const createActions = ({ db, mdb, services }) => {
             .catch(console.error);
     };
 
-    const resetSubscriberPosition = (context) => {
-        const { traceId, userId, subscriberId } = context;
-
-        const resetCommand = {
-            id: uuid(),
-            type: 'ResetPosition',
-            streamName: `subscriberPosition:command-${subscriberId}`,
-            metadata: {
-                traceId,
-                userId,
-                subscriberId,
-            },
-            data: {
-                position: 0,
-                lastMessageId: null,
-            },
-        };
-
-        return services.eventStore
-            .writeMessage(resetCommand)
-            .then(() => context)
-            .catch((err) => {
-                const { status, statusText, data } = err.response;
-                console.error(status, statusText, data);
-            });
-    };
-
     return {
         resendMessage,
-        clearView,
-        clearAllViews,
         deleteMessage,
         deleteAllMessages,
-        resetSubscriberPosition,
     };
 };
 
-module.exports = createActions;
+module.exports = createMessageActions;
