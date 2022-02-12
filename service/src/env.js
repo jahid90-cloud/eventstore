@@ -14,6 +14,7 @@ const createEnv = () => {
     return {
         appName: loadFromEnvironment('APP_NAME'),
         enableGrpcTestRun: loadFromEnvironment('ENABLE_GRPC_TEST_RUN') === '1',
+        enableHttpTestRun: loadFromEnvironment('ENABLE_HTTP_TEST_RUN') === '1',
         eventstoreConnectionString: loadFromEnvironment('EVENTSTORE_CONNECTION_STRING'),
         grpcAddress: loadFromEnvironment('GRPC_SERVER_ADDRESS'),
         env: loadFromEnvironment('NODE_ENV'),

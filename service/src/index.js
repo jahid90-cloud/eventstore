@@ -13,6 +13,7 @@ const start = () => {
     grpcServer.start();
 
     env.enableGrpcTestRun && setTimeout(() => grpcServer.testRunClient(), 2 * 1000);
+    env.enableHttpTestRun && setTimeout(() => restServer.testRunClient(), 2 * 1000);
 };
 
 module.exports = {

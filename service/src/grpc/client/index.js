@@ -16,11 +16,18 @@ const createClient = ({ env, config }) => {
     const write = createWrite({ config });
 
     const testRun = () => {
+        // Would be NotFound the first time
         stub.read(read.newRequest(), read.getMetadata(), read.responseHandler());
         stub.last(last.newRequest(), last.getMetadata(), last.responseHandler());
+
+        // Write a message
         stub.write(write.newRequest(), write.getMetadata(), write.responseHandler());
-        stub.read(read.newRequest(), read.getMetadata(), read.responseHandler());
-        stub.last(last.newRequest(), last.getMetadata(), last.responseHandler());
+
+        // Give time for write to complete, so response is not NotFound, but Success
+        setTimeout(() => {
+            stub.read(read.newRequest(), read.getMetadata(), read.responseHandler());
+            stub.last(last.newRequest(), last.getMetadata(), last.responseHandler());
+        }, 2 * 1000);
     };
 
     config.logger.debug('Created grpc client');
