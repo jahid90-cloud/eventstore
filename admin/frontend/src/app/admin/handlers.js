@@ -220,6 +220,18 @@ const createHandlers = ({ actions, queries }) => {
             );
     };
 
+    const handleClearAllViews = (req, res) => {
+        const views = JSON.parse(req.body.views);
+        const referrer = req.get('referrer');
+        const parsed = new URL(referrer);
+
+        return actions
+            .clearAllViews(views)
+            .then(() =>
+                res.redirect(`${parsed.pathname}${parsed.search}${parsed.hash}`)
+            );
+    };
+
     const handleDeleteMessage = (req, res) => {
         const messageId = req.params.id;
         const referrer = req.get('referrer');
@@ -304,6 +316,7 @@ const createHandlers = ({ actions, queries }) => {
         handleMessagesOfType,
         handleViewsIndex,
         handleClearView,
+        handleClearAllViews,
         handleDeleteMessage,
         handleDeleteAllMessages,
         handleResendMessage,

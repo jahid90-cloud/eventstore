@@ -1,3 +1,4 @@
+const Bluebird = require('bluebird');
 const camelcaseKeys = require('camelcase-keys');
 const { v4: uuid } = require('uuid');
 
@@ -30,6 +31,12 @@ const createActions = ({ db, mdb, services }) => {
 
     const clearView = (view) => {
         return db.then((client) => client(view).delete());
+    };
+
+    const clearAllViews = (views) => {
+        return Bluebird.resolve(views)
+            .then((views) => views.map((view) => view.name))
+            .then((views) => views.map(clearView));
     };
 
     const deleteMessage = (id) => {
@@ -66,6 +73,7 @@ const createActions = ({ db, mdb, services }) => {
     return {
         resendMessage,
         clearView,
+        clearAllViews,
         deleteMessage,
         deleteAllMessages,
         resetSubscriberPosition,

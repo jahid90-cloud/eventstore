@@ -1,5 +1,4 @@
 const Bluebird = require('bluebird');
-const bodyParser = require('body-parser');
 const camelcaseKeys = require('camelcase-keys');
 const express = require('express');
 
@@ -101,10 +100,7 @@ const build = ({ db, services }) => {
     router
         .route('/log-in')
         .get(handlers.handleShowLoginForm)
-        .post(
-            bodyParser.urlencoded({ extended: true }),
-            handlers.handleAuthenticate
-        );
+        .post(handlers.handleAuthenticate);
 
     router.route('/log-out').get(handlers.handleLogOut);
 

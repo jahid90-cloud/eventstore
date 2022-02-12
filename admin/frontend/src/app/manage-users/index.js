@@ -1,5 +1,4 @@
 const Bluebird = require('bluebird');
-const bodyParser = require('body-parser');
 const camelcaseKeys = require('camelcase-keys');
 const express = require('express');
 
@@ -96,18 +95,10 @@ const build = ({ db, services }) => {
 
     const router = express.Router();
 
-    router
-        .route('/add-admin-privilege')
-        .post(
-            bodyParser.urlencoded({ extended: false }),
-            handlers.handleAdminPrivilegeAdd
-        );
+    router.route('/add-admin-privilege').post(handlers.handleAdminPrivilegeAdd);
     router
         .route('/remove-admin-privilege')
-        .post(
-            bodyParser.urlencoded({ extended: false }),
-            handlers.handleAdminPrivilegeRemoval
-        );
+        .post(handlers.handleAdminPrivilegeRemoval);
 
     return {
         router,

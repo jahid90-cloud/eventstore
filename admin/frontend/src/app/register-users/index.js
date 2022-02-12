@@ -1,5 +1,4 @@
 const Bluebird = require('bluebird');
-const bodyParser = require('body-parser');
 const camelcaseKeys = require('camelcase-keys');
 const express = require('express');
 const { v4: uuid } = require('uuid');
@@ -98,10 +97,7 @@ const build = ({ db, services }) => {
     router
         .route('/')
         .get(handlers.handleRegistrationForm)
-        .post(
-            bodyParser.urlencoded({ extended: true }),
-            handlers.handleRegisterUser
-        );
+        .post(handlers.handleRegisterUser);
 
     router
         .route('/registration-complete')

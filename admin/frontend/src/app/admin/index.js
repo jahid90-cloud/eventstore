@@ -1,4 +1,3 @@
-const bodyParser = require('body-parser');
 const express = require('express');
 
 const createQueries = require('./queries');
@@ -20,12 +19,7 @@ const createAdminApplication = ({ db, mdb, services }) => {
     router.route('/messages/:id').get(handlers.handleShowMessage);
     router.route('/messages').get(handlers.handleMessagesIndex);
     router.route('/messages/:id').delete(handlers.handleDeleteMessage);
-    router
-        .route('/messages')
-        .delete(
-            bodyParser.urlencoded({ extended: false }),
-            handlers.handleDeleteAllMessages
-        );
+    router.route('/messages').delete(handlers.handleDeleteAllMessages);
     router.route('/messages/:id').post(handlers.handleResendMessage);
 
     router
@@ -51,6 +45,7 @@ const createAdminApplication = ({ db, mdb, services }) => {
     router.route('/type-messages/:type').get(handlers.handleMessagesOfType);
 
     router.route('/views').get(handlers.handleViewsIndex);
+    router.route('/views').post(handlers.handleClearAllViews);
     router.route('/views/:name').post(handlers.handleClearView);
 
     router.route('/entities').get(handlers.handleEntitiesIndex);

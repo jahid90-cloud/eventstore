@@ -1,5 +1,6 @@
 const path = require('path');
 
+const bodyParser = require('body-parser');
 const cookieSession = require('cookie-session');
 const express = require('express');
 const methodOverride = require('method-override');
@@ -15,6 +16,9 @@ const mountMiddleware = (app, env) => {
         maxAge: 24 * 60 * 60 * 1000,
     });
     app.use(cookieSessionMiddleware);
+
+    app.use(bodyParser.urlencoded({ extended: false }));
+    app.use(bodyParser.json());
 
     app.use(methodOverride('_method'));
     app.use(lastResortErrorHandler);

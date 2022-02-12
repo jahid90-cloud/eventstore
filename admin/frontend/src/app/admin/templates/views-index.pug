@@ -6,6 +6,11 @@ block content
   if views.length === 0
     p There are no views.
   else
+    .float-right.md-2
+        form.form-inline(action='/admin/views' method='POST')
+          input(name='views' type='hidden' value=views)
+          button.btn.btn-primary(type='submit') Clear All
+    h2 All available views
     table.table.table-hover
       thead
         tr
