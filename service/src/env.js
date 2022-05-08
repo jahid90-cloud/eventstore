@@ -1,6 +1,6 @@
 const isDevelopment = process.env.NODE_ENV === 'development';
 
-isDevelopment && require('dotenv').config();
+isDevelopment && require('dotenv').config({ path: 'dev.env' });
 
 const loadFromEnvironment = (key) => {
     if (!process.env[key]) {
