@@ -15,6 +15,8 @@ servers:
     description: Docker Server
   - url: https://eventstore.jahiduls.kube/api/
     description: Kubernetes Server
+  - url: https://eventstore.home.io/api
+    description: MicroFrontend Server
 
 tags:
   - name: health
