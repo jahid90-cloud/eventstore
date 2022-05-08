@@ -8,9 +8,6 @@ networks:
     name: backend
     driver: bridge
 
-volumes:
-  eventstore-service-node-modules:
-
 services:
 
   openapi:
@@ -72,8 +69,6 @@ services:
     networks:
       - traefik
       - backend
-    #volumes:
-      #- eventstore-service-node-modules:/app/node_modules
     environment:
       - APP_NAME=Event Store
       - ENABLE_GRPC_TEST_RUN=${ENABLE_GRPC_TEST_RUN}
