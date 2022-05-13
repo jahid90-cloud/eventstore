@@ -18,7 +18,5 @@ const signalAppStart = () => {
 };
 
 module.exports = {
-    app,
-    config,
     start,
 };

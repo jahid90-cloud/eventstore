@@ -1,23 +1,23 @@
 version: 6
 
 commands:
-  docker:up:basic:
+  ctr:up:basic:
     description: Start the db and explorer containers
     steps:
       - run: docker-compose up -d eventstore openapi
-  docker:up:
+  ctr:up:
     description: Start docker containers
     steps:
       - run: docker-compose up -d
-  docker:down:
+  ctr:down:
     description: Stop the containers
     steps:
       - run: docker-compose down
-  docker:rebuild:
+  ctr:rebuild:
     description: Rebuild docker containers
     steps:
       - run: docker-compose build eventstore-service admin-app admin-aggregators admin-components
-  docker:rebuild:db:
+  ctr:rebuild:db:
     description: Rebuild the eventstore db
     steps:
       - run: docker-compose build eventstore

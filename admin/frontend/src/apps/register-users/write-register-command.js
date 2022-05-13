@@ -1,6 +1,6 @@
 const { v4: uuid } = require('uuid');
 
-const ServiceError = require('../errors/service-error');
+const ServiceError = require('../../errors/service-error');
 
 const writeRegisterCommand = (context) => {
     const userId = context.attributes.id;

@@ -1,6 +1,6 @@
 const validate = require('validate.js');
 
-const ValidationError = require('../errors/validation-error');
+const ValidationError = require('../../errors/validation-error');
 
 const constraints = {
     email: {

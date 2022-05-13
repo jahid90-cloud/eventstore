@@ -1,4 +1,4 @@
-const NotFoundError = require('../errors/not-found-error');
+const NotFoundError = require('../../errors/not-found-error');
 
 const ensureUserFound = (context) => {
     if (!context.user) {

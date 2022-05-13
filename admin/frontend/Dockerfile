@@ -3,9 +3,9 @@ FROM registry.jahiduls.mint/node:16-alpine
 RUN npm i -g pnpm
 
 WORKDIR /app
-COPY src/package.json src/pnpm-lock.yaml .
+COPY package.json pnpm-lock.yaml .
 RUN pnpm install
 
-COPY ./src .
+COPY . .
 
 CMD ["pnpm", "start"]

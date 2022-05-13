@@ -2,9 +2,9 @@ const Bluebird = require('bluebird');
 const camelcaseKeys = require('camelcase-keys');
 const express = require('express');
 
-const NotFoundError = require('../errors/not-found-error');
-const CredentialsMismatchError = require('../errors/credential-mismatch-error');
-const AuthenticationError = require('../errors/authentication-error');
+const NotFoundError = require('../../errors/not-found-error');
+const CredentialsMismatchError = require('../../errors/credential-mismatch-error');
+const AuthenticationError = require('../../errors/authentication-error');
 
 const loadUserCredential = require('./load-user-credential');
 const ensureUserCredentialFound = require('./ensure-user-credential-found');
@@ -16,9 +16,7 @@ const handleCredentialsMismatch = require('./handle-credential-mismatch');
 const createQueries = ({ db }) => {
     const byEmail = (email) => {
         return db
-            .then((client) =>
-                client('user_credentials').where({ email }).limit(1)
-            )
+            .then((client) => client('user_credentials').where({ email }).limit(1))
             .then(camelcaseKeys)
             .then((rows) => rows[0]);
     };
@@ -44,9 +42,7 @@ const createActions = ({ queries, services }) => {
             .then(validatePassword)
             .then(writeLoggedInEvent)
             .catch(NotFoundError, () => handleCredentialNotFound(context))
-            .catch(CredentialsMismatchError, () =>
-                handleCredentialsMismatch(context)
-            );
+            .catch(CredentialsMismatchError, () => handleCredentialsMismatch(context));
     };
 
     return {
@@ -97,10 +93,7 @@ const build = ({ db, services }) => {
 
     const router = express.Router();
 
-    router
-        .route('/log-in')
-        .get(handlers.handleShowLoginForm)
-        .post(handlers.handleAuthenticate);
+    router.route('/log-in').get(handlers.handleShowLoginForm).post(handlers.handleAuthenticate);
 
     router.route('/log-out').get(handlers.handleLogOut);
 

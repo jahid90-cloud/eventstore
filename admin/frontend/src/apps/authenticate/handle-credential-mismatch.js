@@ -1,6 +1,6 @@
 const { v4: uuid } = require('uuid');
 
-const AuthenticationError = require('../errors/authentication-error');
+const AuthenticationError = require('../../errors/authentication-error');
 
 const handleCredentialMismatch = (context) => {
     const event = {

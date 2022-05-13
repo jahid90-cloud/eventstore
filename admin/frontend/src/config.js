@@ -2,11 +2,11 @@ const createKnexClient = require('./knex-client');
 
 const createEventStoreService = require('./services/event-store-service');
 
-const createHomeApp = require('./home');
-const createAdminApp = require('./admin');
-const createRegisterUsersApp = require('./register-users');
-const createAuthenticationApp = require('./authenticate');
-const createManageUsersApp = require('./manage-users');
+const createHomeApp = require('./apps/home');
+const createAdminApp = require('./apps/admin');
+const createRegisterUsersApp = require('./apps/register-users');
+const createAuthenticationApp = require('./apps/authenticate');
+const createManageUsersApp = require('./apps/manage-users');
 
 const createConfig = ({ env }) => {
     const knexClient = createKnexClient({
@@ -42,7 +42,6 @@ const createConfig = ({ env }) => {
     });
 
     return {
-        eventStoreService,
         homeApp,
         adminApp,
         registerUsersApp,

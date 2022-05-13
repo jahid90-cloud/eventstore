@@ -3,21 +3,19 @@ const camelcaseKeys = require('camelcase-keys');
 const express = require('express');
 const { v4: uuid } = require('uuid');
 
-const ValidationError = require('../errors/validation-error');
+const ValidationError = require('../../errors/validation-error');
+const ServiceError = require('../../errors/service-error');
 
 const validate = require('./validate');
 const loadExistingIdentity = require('./load-existing-identity');
 const ensureThereWasNoExistingIdentity = require('./ensure-there-was-no-existing-identity');
 const hashPassword = require('./hash-password');
 const writeRegisterCommand = require('./write-register-command');
-const ServiceError = require('../errors/service-error');
 
 const createQueries = ({ db }) => {
     const byEmail = (email) => {
         return db
-            .then((client) =>
-                client('user_credentials').where({ email }).limit(1)
-            )
+            .then((client) => client('user_credentials').where({ email }).limit(1))
             .then(camelcaseKeys)
             .then((rows) => rows[0]);
     };
@@ -94,14 +92,9 @@ const build = ({ db, services }) => {
 
     const router = express.Router();
 
-    router
-        .route('/')
-        .get(handlers.handleRegistrationForm)
-        .post(handlers.handleRegisterUser);
+    router.route('/').get(handlers.handleRegistrationForm).post(handlers.handleRegisterUser);
 
-    router
-        .route('/registration-complete')
-        .get(handlers.handleRegistrationComplete);
+    router.route('/registration-complete').get(handlers.handleRegistrationComplete);
 
     return {
         router,

@@ -1,7 +1,6 @@
-lockfileVersion: 5.3
+lockfileVersion: 5.4
 
 specifiers:
-  '@jahid90/message-store': link:../libs/message-store
   axios: ^0.25.0
   bcrypt: ^5.0.1
   better-sqlite3: ^7.5.0
@@ -20,7 +19,6 @@ specifiers:
   validate.js: ^0.13.1
 
 dependencies:
-  '@jahid90/message-store': link:../libs/message-store
   axios: 0.25.0
   bcrypt: 5.0.1
   bluebird: 3.7.2
@@ -28,7 +26,7 @@ dependencies:
   camelcase-keys: 7.0.1
   cookie-session: 2.0.0
   express: 4.17.2
-  knex: 1.0.1_better-sqlite3@7.5.0+pg@8.7.1
+  knex: 1.0.1_c3bfxbabrrm5t6ljg6pk2skdny
   method-override: 3.0.0
   pg: 8.7.1
   pug: 3.0.2
@@ -1101,7 +1099,7 @@ packages:
       json-buffer: 3.0.0
     dev: true
 
-  /knex/1.0.1_better-sqlite3@7.5.0+pg@8.7.1:
+  /knex/1.0.1_c3bfxbabrrm5t6ljg6pk2skdny:
     resolution: {integrity: sha512-pusgMo74lEbUxmri+YfWV8x/LJacP/2KcemTCKH7WnXFYz5RoMi+8WM4OJ05b0glfF+aWB4nkFsxsXxJ8qioLQ==}
     engines: {node: '>=12'}
     hasBin: true

@@ -1,4 +1,4 @@
-const AuthenticationError = require('../errors/authentication-error');
+const AuthenticationError = require('../../errors/authentication-error');
 
 const handleCredentialNotFound = (context) => {
     throw new AuthenticationError();
