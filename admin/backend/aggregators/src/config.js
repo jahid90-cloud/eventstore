@@ -1,6 +1,6 @@
 const createKnexClient = require('./knex-client');
 const createPostgresClient = require('./postgres-client');
-const createMessageStore = require('@jahid90/message-store');
+const createMessageStore = require('@jahiduls/lib-message-store');
 
 const createUserCredentialsAggregator = require('./users/user-credentials');
 const createAdminUsersAggregator = require('./admin/admin-users');
@@ -18,7 +18,7 @@ const createConfig = ({ env }) => {
     const postgresClient = createPostgresClient({
         connectionString: env.messageStoreConnectionString,
     });
-    const messageStore = createMessageStore({ db: postgresClient });
+    const messageStore = createMessageStore({ db: postgresClient, driver: 'postgres' });
 
     const userCredentialsAggregator = createUserCredentialsAggregator({
         db: knexClient,
@@ -36,11 +36,10 @@ const createConfig = ({ env }) => {
         db: knexClient,
         messageStore,
     });
-    const adminSubscriberPositionsAggregator =
-        createAdminSubscriberPositionsAggregator({
-            db: knexClient,
-            messageStore,
-        });
+    const adminSubscriberPositionsAggregator = createAdminSubscriberPositionsAggregator({
+        db: knexClient,
+        messageStore,
+    });
     const adminEntitiesAggregator = createAdminEntitiesAggregator({
         db: knexClient,
         messageStore,

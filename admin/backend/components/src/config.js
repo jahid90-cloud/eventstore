@@ -1,5 +1,5 @@
 const createPickupTransport = require('nodemailer-pickup-transport');
-const createMessageStore = require('@jahid90/message-store');
+const createMessageStore = require('@jahiduls/lib-message-store');
 
 const createPostgresClient = require('./postgres-client');
 
@@ -11,7 +11,7 @@ const createConfig = ({ env }) => {
     const postgresClient = createPostgresClient({
         connectionString: env.messageStoreConnectionString,
     });
-    const messageStore = createMessageStore({ db: postgresClient });
+    const messageStore = createMessageStore({ db: postgresClient, driver: 'postgres' });
     const transport = createPickupTransport({ directory: env.emailDirectory });
 
     const identityComponent = createIdentityComponent({ messageStore });
